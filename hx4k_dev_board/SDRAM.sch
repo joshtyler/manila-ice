@@ -4,7 +4,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 4
+Sheet 3 9
 Title ""
 Date ""
 Rev ""
@@ -600,10 +600,10 @@ Wire Wire Line
 	7500 1100 7500 1150
 Wire Wire Line
 	7500 800  7500 750 
+Text Notes 8050 1650 0    50   ~ 0
+Datasheet doesn't specify decoupling, so allocate one cap per pin
 Wire Bus Line
 	3500 2300 3500 3400
 Wire Bus Line
 	7300 2100 7300 3600
-Text Notes 8050 1650 0    50   ~ 0
-Datasheet doesn't specify decoupling, so allocate one cap per pin
 $EndSCHEMATC

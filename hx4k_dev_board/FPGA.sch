@@ -1080,105 +1080,101 @@ Wire Wire Line
 	6000 1200 6000 1250
 Wire Wire Line
 	6000 850  6000 900 
-Text HLabel -1350 1700 0    50   BiDi ~ 0
+Text HLabel 5500 3800 0    50   BiDi ~ 0
 RAM_DATA[0..15]
-Wire Bus Line
-	-1350 1700 -1300 1700
 Entry Wire Line
-	-1300 1750 -1200 1850
+	5600 3800 5700 3900
 Entry Wire Line
-	-1300 1850 -1200 1950
+	5600 3900 5700 4000
 Entry Wire Line
-	-1300 1950 -1200 2050
+	5600 4000 5700 4100
 Entry Wire Line
-	-1300 2050 -1200 2150
+	5600 4100 5700 4200
 Entry Wire Line
-	-1300 2150 -1200 2250
+	5600 4200 5700 4300
 Entry Wire Line
-	-1300 2250 -1200 2350
+	5600 4300 5700 4400
 Entry Wire Line
-	-1300 2350 -1200 2450
+	9100 2250 9200 2350
 Entry Wire Line
-	-1300 2450 -1200 2550
+	9100 1350 9200 1450
 Entry Wire Line
-	-1300 2550 -1200 2650
+	9100 1450 9200 1550
 Entry Wire Line
-	-1300 2650 -1200 2750
+	9100 1550 9200 1650
 Entry Wire Line
-	-1300 2750 -1200 2850
+	9100 1650 9200 1750
 Entry Wire Line
-	-1300 2850 -1200 2950
+	9100 1750 9200 1850
 Entry Wire Line
-	-1300 2950 -1200 3050
+	9100 1850 9200 1950
 Entry Wire Line
-	-1300 3050 -1200 3150
+	9100 1950 9200 2050
 Entry Wire Line
-	-1300 3150 -1200 3250
+	9100 2050 9200 2150
 Entry Wire Line
-	-1300 3250 -1200 3350
+	9100 2150 9200 2250
 Wire Wire Line
-	-1200 1850 -650 1850
+	9200 2250 9750 2250
 Wire Wire Line
-	-1200 1950 -650 1950
+	9200 2050 9750 2050
 Wire Wire Line
-	-1200 2050 -650 2050
+	9200 1850 9750 1850
 Wire Wire Line
-	-1200 2150 -650 2150
+	9200 1650 9750 1650
 Wire Wire Line
-	-1200 2250 -650 2250
+	9200 1450 9750 1450
 Wire Wire Line
-	-1200 2350 -650 2350
+	5700 4300 6250 4300
 Wire Wire Line
-	-1200 2450 -650 2450
+	5700 3900 6250 3900
 Wire Wire Line
-	-1200 2550 -650 2550
+	5700 4000 6250 4000
 Wire Wire Line
-	-1200 2650 -650 2650
+	5700 4200 6250 4200
 Wire Wire Line
-	-1200 2750 -650 2750
+	5700 4400 6250 4400
 Wire Wire Line
-	-1200 2850 -650 2850
+	9200 1550 9750 1550
 Wire Wire Line
-	-1200 2950 -650 2950
+	9200 1750 9750 1750
 Wire Wire Line
-	-1200 3050 -650 3050
+	9200 1950 9750 1950
 Wire Wire Line
-	-1200 3150 -650 3150
+	9200 2150 9750 2150
 Wire Wire Line
-	-1200 3250 -650 3250
-Wire Wire Line
-	-1200 3350 -650 3350
-Text Label -1150 1850 0    50   ~ 0
+	9200 2350 9750 2350
+Text Label 9250 2250 0    50   ~ 0
 RAM_DATA0
-Text Label -1150 1950 0    50   ~ 0
+Text Label 9250 2050 0    50   ~ 0
 RAM_DATA1
-Text Label -1150 2050 0    50   ~ 0
+Text Label 9250 1850 0    50   ~ 0
 RAM_DATA2
-Text Label -1150 2150 0    50   ~ 0
+Text Label 9250 1650 0    50   ~ 0
 RAM_DATA3
-Text Label -1150 2250 0    50   ~ 0
+Text Label 9250 1450 0    50   ~ 0
 RAM_DATA4
-Text Label -1150 2350 0    50   ~ 0
+Text Label 5750 4300 0    50   ~ 0
 RAM_DATA5
-Text Label -1150 2450 0    50   ~ 0
+Text Label 5750 4100 0    50   ~ 0
 RAM_DATA6
-Text Label -1150 2550 0    50   ~ 0
+Text Label 5750 3900 0    50   ~ 0
 RAM_DATA7
-Text Label -1150 2650 0    50   ~ 0
+Text Label 5750 4000 0    50   ~ 0
 RAM_DATA8
-Text Label -1150 2750 0    50   ~ 0
+Text Label 5750 4200 0    50   ~ 0
 RAM_DATA9
-Text Label -1150 2850 0    50   ~ 0
+Text Label 5750 4400 0    50   ~ 0
 RAM_DATA10
-Text Label -1150 2950 0    50   ~ 0
+Text Label 9250 1550 0    50   ~ 0
 RAM_DATA11
-Text Label -1150 3050 0    50   ~ 0
+Text Label 9250 1750 0    50   ~ 0
 RAM_DATA12
-Text Label -1150 3150 0    50   ~ 0
+Text Label 9250 1950 0    50   ~ 0
 RAM_DATA13
-Text Label -1150 3250 0    50   ~ 0
+Text Label 9250 2150 0    50   ~ 0
 RAM_DATA14
-Text Label -1150 3350 0    50   ~ 0
+Text Label 9250 2350 0    50   ~ 0
 RAM_DATA15
 Text HLabel 5450 1550 0    50   Output ~ 0
 RAM_ADDRESS[0..11]
@@ -1268,38 +1264,38 @@ Text Label 5900 2900 0    50   ~ 0
 RAM_BS0
 Text Label 5900 2700 0    50   ~ 0
 RAM_BS1
-Text HLabel 9600 1650 0    50   Output ~ 0
+Text HLabel 6100 3100 0    50   Output ~ 0
 ~RAM_CS
-Text HLabel 9600 1750 0    50   Output ~ 0
+Text HLabel 6100 3300 0    50   Output ~ 0
 RAM_CKE
-Text HLabel 9600 1850 0    50   Output ~ 0
+Text HLabel 6100 3500 0    50   Output ~ 0
 RAM_CLK
-Text HLabel 9600 1950 0    50   Output ~ 0
+Text HLabel 6100 3800 0    50   Output ~ 0
 RAM_LDQM
-Text HLabel 9600 2050 0    50   Output ~ 0
+Text HLabel 6100 3700 0    50   Output ~ 0
 RAM_UDQM
-Text HLabel 9600 2150 0    50   Output ~ 0
+Text HLabel 6100 3600 0    50   Output ~ 0
 ~RAM_WE
-Text HLabel 9600 2250 0    50   Output ~ 0
+Text HLabel 6100 3400 0    50   Output ~ 0
 ~RAM_CAS
-Text HLabel 9600 2350 0    50   Output ~ 0
+Text HLabel 6100 3200 0    50   Output ~ 0
 ~RAM_RAS
 Wire Wire Line
-	9600 1650 9750 1650
+	6100 3100 6250 3100
 Wire Wire Line
-	9750 1750 9600 1750
+	6250 3300 6100 3300
 Wire Wire Line
-	9600 1850 9750 1850
+	6100 3500 6250 3500
 Wire Wire Line
-	9750 1950 9600 1950
+	6250 3800 6100 3800
 Wire Wire Line
-	9600 2050 9750 2050
+	6100 3700 6250 3700
 Wire Wire Line
-	9750 2150 9600 2150
+	6250 3600 6100 3600
 Wire Wire Line
-	9600 2250 9750 2250
+	6100 3400 6250 3400
 Wire Wire Line
-	9750 2350 9600 2350
+	6250 3200 6100 3200
 Wire Wire Line
 	9650 2550 9750 2550
 Wire Wire Line
@@ -2032,6 +2028,20 @@ Wire Wire Line
 	5350 2850 5600 2850
 Wire Wire Line
 	5600 2850 5600 2900
+Wire Wire Line
+	5700 4100 6250 4100
+Wire Bus Line
+	5500 3800 5600 3800
+Wire Bus Line
+	5600 4650 7150 4650
+Wire Bus Line
+	7150 4650 7150 1100
+Wire Bus Line
+	7150 1100 9100 1100
+Wire Bus Line
+	5600 3800 5600 4650
+Wire Bus Line
+	1150 1500 1150 2250
 Wire Bus Line
 	1150 3400 1150 4150
 Wire Bus Line
@@ -2041,9 +2051,7 @@ Wire Bus Line
 Wire Bus Line
 	3250 1600 3250 2350
 Wire Bus Line
-	1150 1500 1150 2250
+	9100 1100 9100 2250
 Wire Bus Line
 	5500 1550 5500 2900
-Wire Bus Line
-	-1300 1700 -1300 3250
 $EndSCHEMATC

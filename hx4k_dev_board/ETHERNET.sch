@@ -465,7 +465,7 @@ U 1 1 5D800FBF
 P 6100 3850
 F 0 "U5" H 6900 1600 50  0000 C CNN
 F 1 "RTL8211EG-VB-CG" H 5450 1600 50  0000 C CNN
-F 2 "Package_DFN_QFN:QFN-64-1EP_9x9mm_P0.5mm_EP3.8x3.8mm" H 5500 4250 50  0001 C CNN
+F 2 "Package_DFN_QFN:QFN-64-1EP_9x9mm_P0.5mm_EP3.8x3.8mm_ThermalVias" H 5500 4250 50  0001 C CNN
 F 3 "https://datasheet.lcsc.com/szlcsc/Realtek-Semicon-RTL8211EG-VB-CG_C69264.pdf" H 6800 3650 50  0001 C CNN
 	1    6100 3850
 	1    0    0    -1  
@@ -1168,10 +1168,6 @@ Text Label 7450 2850 0    50   ~ 0
 MDI3_N
 Wire Wire Line
 	1800 5450 4100 5450
-Wire Bus Line
-	2450 3600 2450 4350
-Wire Bus Line
-	4450 2400 4450 3150
 Text Label 3200 5250 0    50   ~ 0
 CLK125
 Text Label 6300 1400 0    50   ~ 0
@@ -1184,4 +1180,8 @@ Text Label 10100 3600 0    50   ~ 0
 TERM
 Text Label 1750 5050 0    50   ~ 0
 CLK50
+Wire Bus Line
+	2450 3600 2450 4350
+Wire Bus Line
+	4450 2400 4450 3150
 $EndSCHEMATC

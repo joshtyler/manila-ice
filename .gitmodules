@@ -1,0 +1,3 @@
+[submodule "hx4k_dev_board/SOICbite"]
+	path = hx4k_dev_board/SOICbite
+	url = https://github.com/SimonMerrett/SOICbite.git

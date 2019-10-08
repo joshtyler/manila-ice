@@ -1304,148 +1304,114 @@ Wire Wire Line
 	9650 2750 9750 2750
 Wire Wire Line
 	9750 2850 9650 2850
-Text HLabel 3750 1550 0    50   Output ~ 0
+Text HLabel 3750 2850 0    50   Output ~ 0
 ETH_GTXCLK
-Text HLabel 3750 1650 0    50   Input ~ 0
+Text HLabel 3750 3550 0    50   Input ~ 0
 ETH_TXCLK
-Text HLabel 3200 1600 0    50   Output ~ 0
+Text HLabel 3100 2900 0    50   Output ~ 0
 ETH_TXD[0..7]
-Text HLabel 3750 2550 0    50   Output ~ 0
+Text HLabel 3750 2950 0    50   Output ~ 0
 ETH_TXEN
-Text HLabel 3750 2650 0    50   Output ~ 0
-ETH_TXER
-Text HLabel 3750 2750 0    50   Input ~ 0
-RXCLK
-Text HLabel 3200 2700 0    50   Input ~ 0
-ETH_RXD[0..7]
-Text HLabel 3750 3650 0    50   Input ~ 0
-ETH_RXDV
-Text HLabel 3750 3750 0    50   Input ~ 0
-ETH_RXER
 Text HLabel 3750 4050 0    50   Output ~ 0
+ETH_TXER
+Text HLabel 3750 2050 0    50   Input ~ 0
+RXCLK
+Text HLabel 3100 1550 0    50   Input ~ 0
+ETH_RXD[0..7]
+Text HLabel 3750 1550 0    50   Input ~ 0
+ETH_RXDV
+Text HLabel 3750 2550 0    50   Input ~ 0
+ETH_RXER
+Text HLabel 3750 4350 0    50   Output ~ 0
 ETH_MDC
 Text HLabel 3750 4150 0    50   BiDi ~ 0
 ETH_MDIO
 Wire Wire Line
-	3750 1550 3800 1550
+	3750 2850 3800 2850
 Wire Wire Line
-	3800 1650 3750 1650
+	3800 3550 3750 3550
 Entry Wire Line
-	3250 1650 3350 1750
+	3150 2950 3250 3050
 Entry Wire Line
-	3250 1750 3350 1850
+	3150 3150 3250 3250
 Entry Wire Line
-	3250 1850 3350 1950
+	3150 3250 3250 3350
 Entry Wire Line
-	3250 1950 3350 2050
+	3150 3350 3250 3450
 Entry Wire Line
-	3250 2050 3350 2150
+	3150 3550 3250 3650
 Entry Wire Line
-	3250 2150 3350 2250
+	3150 3650 3250 3750
 Entry Wire Line
-	3250 2250 3350 2350
+	3150 3750 3250 3850
 Entry Wire Line
-	3250 2350 3350 2450
+	3150 3850 3250 3950
 Wire Bus Line
-	3250 1600 3200 1600
-Wire Wire Line
-	3350 1750 3800 1750
-Wire Wire Line
-	3350 1850 3800 1850
-Wire Wire Line
-	3350 1950 3800 1950
-Wire Wire Line
-	3350 2050 3800 2050
-Wire Wire Line
-	3350 2150 3800 2150
-Wire Wire Line
-	3350 2250 3800 2250
-Wire Wire Line
-	3350 2350 3800 2350
-Wire Wire Line
-	3350 2450 3800 2450
-Text Label 3400 1750 0    50   ~ 0
+	3150 2900 3100 2900
+Text Label 3300 3050 0    50   ~ 0
 ETH_TXD0
-Text Label 3400 1850 0    50   ~ 0
+Text Label 3300 3250 0    50   ~ 0
 ETH_TXD1
-Text Label 3400 1950 0    50   ~ 0
+Text Label 3300 3350 0    50   ~ 0
 ETH_TXD2
-Text Label 3400 2050 0    50   ~ 0
+Text Label 3300 3450 0    50   ~ 0
 ETH_TXD3
-Text Label 3400 2150 0    50   ~ 0
+Text Label 3300 3650 0    50   ~ 0
 ETH_TXD4
-Text Label 3400 2250 0    50   ~ 0
+Text Label 3300 3750 0    50   ~ 0
 ETH_TXD5
-Text Label 3400 2350 0    50   ~ 0
+Text Label 3300 3850 0    50   ~ 0
 ETH_TXD6
-Text Label 3400 2450 0    50   ~ 0
+Text Label 3300 3950 0    50   ~ 0
 ETH_TXD7
 Wire Wire Line
-	3750 2550 3800 2550
+	3750 2950 3800 2950
 Wire Wire Line
-	3800 2650 3750 2650
+	3800 4050 3750 4050
 Wire Wire Line
-	3750 2750 3800 2750
+	3750 2050 3800 2050
 Entry Wire Line
-	3250 2750 3350 2850
-Wire Wire Line
-	3350 2850 3800 2850
+	3150 1550 3250 1650
 Entry Wire Line
-	3250 2850 3350 2950
+	3150 1650 3250 1750
 Entry Wire Line
-	3250 2950 3350 3050
+	3150 1750 3250 1850
 Entry Wire Line
-	3250 3050 3350 3150
+	3150 1850 3250 1950
 Entry Wire Line
-	3250 3150 3350 3250
+	3150 2050 3250 2150
 Entry Wire Line
-	3250 3250 3350 3350
+	3150 2150 3250 2250
 Entry Wire Line
-	3250 3350 3350 3450
+	3150 2250 3250 2350
 Entry Wire Line
-	3250 3450 3350 3550
-Wire Bus Line
-	3200 2700 3250 2700
-Wire Wire Line
-	3350 2950 3800 2950
-Wire Wire Line
-	3350 3050 3800 3050
-Wire Wire Line
-	3350 3150 3800 3150
-Wire Wire Line
-	3350 3250 3800 3250
-Wire Wire Line
-	3350 3350 3800 3350
-Wire Wire Line
-	3350 3450 3800 3450
-Wire Wire Line
-	3350 3550 3800 3550
-Text Label 3400 2850 0    50   ~ 0
+	3150 2350 3250 2450
+Text Label 3400 1650 0    50   ~ 0
 ETH_RXD0
-Text Label 3400 2950 0    50   ~ 0
+Text Label 3400 1750 0    50   ~ 0
 ETH_RXD1
-Text Label 3400 3050 0    50   ~ 0
+Text Label 3400 1850 0    50   ~ 0
 ETH_RXD2
-Text Label 3400 3150 0    50   ~ 0
+Text Label 3400 1950 0    50   ~ 0
 ETH_RXD3
-Text Label 3400 3250 0    50   ~ 0
+Text Label 3400 2150 0    50   ~ 0
 ETH_RXD4
-Text Label 3400 3350 0    50   ~ 0
+Text Label 3400 2250 0    50   ~ 0
 ETH_RXD5
-Text Label 3400 3450 0    50   ~ 0
+Text Label 3400 2350 0    50   ~ 0
 ETH_RXD6
-Text Label 3400 3550 0    50   ~ 0
+Text Label 3400 2450 0    50   ~ 0
 ETH_RXD7
 Wire Wire Line
-	3750 3650 3800 3650
+	3750 1550 3800 1550
 Wire Wire Line
-	3800 3750 3750 3750
+	3800 2550 3750 2550
 Wire Wire Line
-	3750 3850 3800 3850
+	3750 2650 3800 2650
 Wire Wire Line
-	3800 3950 3750 3950
+	3800 2750 3750 2750
 Wire Wire Line
-	3750 4050 3800 4050
+	3750 4350 3800 4350
 Wire Wire Line
 	3800 4150 3750 4150
 $Comp
@@ -1654,9 +1620,9 @@ Text HLabel 1050 1500 0    50   Output ~ 0
 LED[0..7]
 Wire Bus Line
 	1050 1500 1150 1500
-Text HLabel 3750 3850 0    50   Input ~ 0
+Text HLabel 3750 2650 0    50   Input ~ 0
 ETH_COL
-Text HLabel 3750 3950 0    50   Input ~ 0
+Text HLabel 3750 2750 0    50   Input ~ 0
 ETH_CS
 $Comp
 L Memory_Flash:W25Q128JVS U7
@@ -1763,8 +1729,8 @@ Wire Wire Line
 Wire Wire Line
 	3750 4250 3800 4250
 Wire Wire Line
-	3750 4350 3800 4350
-Text HLabel 3750 4350 0    50   Output ~ 0
+	3750 3150 3800 3150
+Text HLabel 3750 3150 0    50   Output ~ 0
 ~ETH_PHYRST
 Text HLabel 3750 4250 0    50   Input ~ 0
 ~ETH_PME_INT
@@ -2038,8 +2004,52 @@ Wire Bus Line
 	7150 4650 7150 1100
 Wire Bus Line
 	7150 1100 9100 1100
+Wire Wire Line
+	3250 3050 3800 3050
+Wire Wire Line
+	3250 3250 3800 3250
+Wire Wire Line
+	3250 3350 3800 3350
+Wire Wire Line
+	3250 3450 3800 3450
+Wire Wire Line
+	3250 3650 3800 3650
+Wire Wire Line
+	3250 3750 3800 3750
+Wire Wire Line
+	3250 3850 3800 3850
+Wire Wire Line
+	3250 3950 3800 3950
+Text Label 5200 5900 0    50   ~ 0
+VCCPLL0
+Text Label 4700 5950 0    50   ~ 0
+VCCPLL1
+Text Label 5400 7450 0    50   ~ 0
+GNDPLL1
+Text Label 6250 7500 0    50   ~ 0
+GNDPLL0
+Wire Bus Line
+	3100 1550 3150 1550
+Wire Wire Line
+	3250 1650 3800 1650
+Wire Wire Line
+	3250 1750 3800 1750
+Wire Wire Line
+	3250 1850 3800 1850
+Wire Wire Line
+	3250 1950 3800 1950
+Wire Wire Line
+	3250 2150 3800 2150
+Wire Wire Line
+	3250 2250 3800 2250
+Wire Wire Line
+	3250 2350 3800 2350
+Wire Wire Line
+	3250 2450 3800 2450
 Wire Bus Line
 	5600 3800 5600 4650
+Wire Bus Line
+	3150 1550 3150 2350
 Wire Bus Line
 	1150 1500 1150 2250
 Wire Bus Line
@@ -2047,9 +2057,7 @@ Wire Bus Line
 Wire Bus Line
 	1150 2300 1150 3050
 Wire Bus Line
-	3250 2700 3250 3450
-Wire Bus Line
-	3250 1600 3250 2350
+	3150 2900 3150 3850
 Wire Bus Line
 	9100 1100 9100 2250
 Wire Bus Line

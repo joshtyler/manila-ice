@@ -378,5 +378,5 @@ Connection ~ 3450 2300
 Text Label 5400 2700 0    50   ~ 0
 3V3FB
 Text Label 5400 4800 0    50   ~ 0
-1V8FB
+1V2FB
 $EndSCHEMATC

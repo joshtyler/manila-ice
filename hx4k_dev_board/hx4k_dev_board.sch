@@ -270,7 +270,7 @@ Wire Wire Line
 Wire Wire Line
 	3050 1200 3050 1250
 Wire Wire Line
-	1900 1600 2500 1600
+	1900 1600 2300 1600
 $Comp
 L Connector:USB_B J1
 U 1 1 5DB0A8C9
@@ -384,4 +384,84 @@ Wire Wire Line
 	1250 5650 1250 5700
 Text Label 2050 1600 0    50   ~ 0
 VBUS
+$Comp
+L Connector:TestPoint TP?
+U 1 1 5DA6EF37
+P 2250 1250
+AR Path="/5E257EC5/5DA6EF37" Ref="TP?"  Part="1" 
+AR Path="/5DA6EF37" Ref="TP4"  Part="1" 
+F 0 "TP4" V 2250 1500 50  0000 C CNN
+F 1 "TestPoint" V 2354 1322 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 2450 1250 50  0001 C CNN
+F 3 "~" H 2450 1250 50  0001 C CNN
+	1    2250 1250
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 5DA73087
+P 2250 1050
+AR Path="/5E257EC5/5DA73087" Ref="TP?"  Part="1" 
+AR Path="/5DA73087" Ref="TP3"  Part="1" 
+F 0 "TP3" V 2250 1300 50  0000 C CNN
+F 1 "TestPoint" V 2354 1122 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 2450 1050 50  0001 C CNN
+F 3 "~" H 2450 1050 50  0001 C CNN
+	1    2250 1050
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 5DA73E99
+P 2250 850
+AR Path="/5E257EC5/5DA73E99" Ref="TP?"  Part="1" 
+AR Path="/5DA73E99" Ref="TP2"  Part="1" 
+F 0 "TP2" V 2250 1100 50  0000 C CNN
+F 1 "TestPoint" V 2354 922 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 2450 850 50  0001 C CNN
+F 3 "~" H 2450 850 50  0001 C CNN
+	1    2250 850 
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+3.3V #PWR0127
+U 1 1 5DA75889
+P 2500 700
+AR Path="/5DA75889" Ref="#PWR0127"  Part="1" 
+AR Path="/5D7E2E67/5DA75889" Ref="#PWR?"  Part="1" 
+F 0 "#PWR0127" H 2500 550 50  0001 C CNN
+F 1 "+3.3V" H 2515 873 50  0000 C CNN
+F 2 "" H 2500 700 50  0001 C CNN
+F 3 "" H 2500 700 50  0001 C CNN
+	1    2500 700 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+1V2 #PWR?
+U 1 1 5DA7683A
+P 2750 700
+AR Path="/5D7E2E67/5DA7683A" Ref="#PWR?"  Part="1" 
+AR Path="/5DA7683A" Ref="#PWR0128"  Part="1" 
+F 0 "#PWR0128" H 2750 550 50  0001 C CNN
+F 1 "+1V2" H 2765 873 50  0000 C CNN
+F 2 "" H 2750 700 50  0001 C CNN
+F 3 "" H 2750 700 50  0001 C CNN
+	1    2750 700 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2500 850  2250 850 
+Wire Wire Line
+	2500 700  2500 850 
+Wire Wire Line
+	2750 700  2750 1050
+Wire Wire Line
+	2750 1050 2250 1050
+Wire Wire Line
+	2250 1250 2300 1250
+Wire Wire Line
+	2300 1250 2300 1600
+Connection ~ 2300 1600
+Wire Wire Line
+	2300 1600 2500 1600
 $EndSCHEMATC

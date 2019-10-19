@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:hx4k_dev_board-cache
 EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268

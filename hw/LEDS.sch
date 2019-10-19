@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:hx4k_dev_board-cache
 EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
@@ -378,8 +377,6 @@ Wire Wire Line
 	4350 2450 5050 2450
 Wire Wire Line
 	5050 2450 5050 3300
-Wire Bus Line
-	4250 1650 4250 2350
 Entry Wire Line
 	4250 1650 4350 1750
 Entry Wire Line
@@ -396,4 +393,6 @@ Entry Wire Line
 	4250 2250 4350 2350
 Entry Wire Line
 	4250 2350 4350 2450
+Wire Bus Line
+	4250 1650 4250 2350
 $EndSCHEMATC

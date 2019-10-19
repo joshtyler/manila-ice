@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:hx4k_dev_board-cache
 EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
@@ -22,6 +21,7 @@ F 0 "U8" H 5350 3650 50  0000 C CNN
 F 1 "M24C01-RMN" H 5950 3650 50  0000 C CNN
 F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 5600 3750 50  0001 C CNN
 F 3 "http://www.st.com/content/ccc/resource/technical/document/datasheet/b0/d8/50/40/5a/85/49/6f/DM00071904.pdf/files/DM00071904.pdf/jcr:content/translations/en.DM00071904.pdf" H 5650 2900 50  0001 C CNN
+F 4 "C79988" H 5600 3400 50  0001 C CNN "LCSC Part"
 	1    5600 3400
 	1    0    0    -1  
 $EndComp

@@ -7,3 +7,6 @@
 [submodule "hw/kicad-footprints"]
 	path = hw/kicad-footprints
 	url = https://github.com/joshtyler/kicad-footprints
+[submodule "hw/outputs/kicad-jlcpcb-bom-plugin"]
+	path = hw/outputs/kicad-jlcpcb-bom-plugin
+	url = https://github.com/urish/kicad-jlcpcb-bom-plugin

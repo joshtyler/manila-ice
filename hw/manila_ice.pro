@@ -1,4 +1,4 @@
-update=Sat 19 Oct 2019 17:32:59 BST
+update=Sat 19 Oct 2019 17:37:25 BST
 version=1
 last_client=kicad
 [general]
@@ -287,7 +287,7 @@ dPairViaGap=0.25
 [schematic_editor]
 version=1
 PageLayoutDescrFile=
-PlotDirectoryName=outputs/schematic.pdf
+PlotDirectoryName=outputs/
 SubpartIdSeparator=0
 SubpartFirstId=65
 NetFmtName=Pcbnew

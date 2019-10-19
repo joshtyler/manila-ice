@@ -389,4 +389,6 @@ Connection ~ 5700 2700
 Connection ~ 4150 2300
 Connection ~ 6250 2300
 Connection ~ 3450 2300
+Text Notes 7750 1550 0    50   ~ 0
+iCE40 has no particular requirements on power sequencing.\n\n2A on each rail will be plenty.
 $EndSCHEMATC

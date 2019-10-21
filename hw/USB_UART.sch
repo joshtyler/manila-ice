@@ -23,6 +23,7 @@ F 1 "CH340E" H 5900 4600 50  0000 C CNN
 F 2 "Package_SO:MSOP-10_3x3mm_P0.5mm" H 5700 3500 50  0001 L CNN
 F 3 "https://www.mpja.com/download/35227cpdata.pdf" H 5300 4850 50  0001 C CNN
 F 4 "C99652" H 5400 4700 50  0001 C CNN "LCSC Part"
+F 5 "-90" H 5650 4050 50  0001 C CNN "JLCPCB Rotation"
 	1    5650 4050
 	1    0    0    -1  
 $EndComp

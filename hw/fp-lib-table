@@ -1,3 +1,4 @@
 (fp_lib_table
   (lib (name SOICbite)(type KiCad)(uri ${KIPRJMOD}/SOICbite.pretty)(options "")(descr ""))
+  (lib (name Art)(type KiCad)(uri ${KIPRJMOD}/Art.pretty)(options "")(descr ""))
 )

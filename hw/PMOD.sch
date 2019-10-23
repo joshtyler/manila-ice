@@ -4,7 +4,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 8 11
+Sheet 6 11
 Title ""
 Date ""
 Rev ""
@@ -136,10 +136,6 @@ Wire Wire Line
 	6050 3300 6050 3450
 Wire Wire Line
 	6050 3450 6000 3450
-Wire Bus Line
-	6900 3350 6900 4400
-Wire Bus Line
-	4650 3300 4650 4400
 Entry Wire Line
 	4650 3550 4750 3650
 Entry Wire Line
@@ -156,4 +152,8 @@ Entry Wire Line
 	6900 3750 6800 3850
 Entry Wire Line
 	6900 3850 6800 3950
+Wire Bus Line
+	6900 3350 6900 4400
+Wire Bus Line
+	4650 3300 4650 4400
 $EndSCHEMATC

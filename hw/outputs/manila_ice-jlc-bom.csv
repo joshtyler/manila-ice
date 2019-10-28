@@ -1,25 +1,32 @@
 Comment,Designator,Footprint,LCSC Part #
-100n Unpolarized capacitor,"C1,C2,C3,C4,C5,C6,C7,C8,C15,C13,C17,C27,C30,C21,C22,C24,C25,C20,C26,C19,C33,C32,C29,C23,C18,C34,C35,C36,C37,C38",C_0603_1608Metric,C14663
-4u7 Unpolarized capacitor,"C11,C12,C10,C9,C16,C14,C28,C31",C_0603_1608Metric,C19666
+100n Unpolarized capacitor,"C1,C2,C3,C4,C5,C6,C7,C8,C15,C13,C17,C27,C30,C21,C22,C24,C25,C20,C26,C19,C33,C32,C29,C23,C18,C34,C35,C36,C37,C38,C41,C11,C51,C47",C_0603_1608Metric,C14663
+100u Polarized capacitor,"C9,C45,C55",CP_EIA-3528-21_Kemet-B,C16133
+22u Unpolarized capacitor,"C10,C43,C42,C44,C46,C53,C52,C54",C_0603_1608Metric,C59461
+10p Unpolarized capacitor,"C12,C48",C_0603_1608Metric,C1634
+4u7 Unpolarized capacitor,"C16,C14,C28,C31",C_0603_1608Metric,C19666
+1n Unpolarized capacitor,"C39,C49",C_0603_1608Metric,C1588
+10n Unpolarized capacitor,"C40,C50",C_0603_1608Metric,C57112
 LED Light emitting diode,"D1,D2,D3,D4,D5,D6,D7,D8,D9,D10,D11",D_0805_2012Metric_Castellated,C84256
+SS54 Diode,"D12,D13",D_SMA,C22452
 GZ2012D101TF Ferrite bead,FB1,L_0805_2012Metric,C1015
-4u7 Inductor,L1,R_0603_1608Metric,C19666
+2u2 Inductor,"L1,L2,L3",L_Sunlord_MWSA0518_5.4x5.2mm,C408345
 1k Resistor,"R1,R2,R31,R32,R33,R34,R35,R36,R37,R38,R39",R_0603_1608Metric,C21190
-56k Resistor,R3,R_0603_1608Metric,C23206
-18k Resistor,R5,R_0603_1608Metric,C25810
-13k Resistor,R6,R_0603_1608Metric,C22797
+7k5 Resistor,R3,R_0603_1608Metric,C23234
+1k2 Resistor,R5,R_0603_1608Metric,C22765
+2k4 Resistor,"R6,R4,R19",R_0603_1608Metric,C22940
 91 Resistor,R8,R_0603_1608Metric,C25199
-2k4 Resistor,R19,R_0603_1608Metric,C22940
-510R Resistor,"R20,R23,R18",R_0603_1608Metric,C23193
+510 Resistor,"R20,R23,R18",R_0603_1608Metric,C23193
 4k7 Resistor,"R21,R22,R17,R15,R13,R12,R11,R16,R10,R14",R_0603_1608Metric,C23162
 0R Resistor,R24,R_0603_1608Metric,C21189
 100 Resistor,"R25,R26",R_0603_1608Metric,C22775
-10k Resistor,"R41,R40,R4,R7,R9,R30,R29,R28,R27,R42",R_0603_1608Metric,C25804
+10k Resistor,"R41,R40,R7,R9,R30,R29,R28,R27,R42",R_0603_1608Metric,C25804
+43k Resistor,"R43,R44",R_0603_1608Metric,C23172
 SW_SPST Single Pole Single Throw (SPST) switch,"SW3,SW2,SW1",SW_Push_1P1T_NO_5.1x5.1mm,C318888
 "W9812G6KH-6 128Mb Synchronous DRAM, 2 Mb x 16 b x 4 Banks, 166 MHz, TSOP-II-54",U1,TSOP-II-54_22.2x10.16mm_P0.8mm,C62379
 "CH340E USB serial converter, UART, MSOP-10",U2,MSOP-10_3x3mm_P0.5mm,C99652
-"TPS7A7001DDA 2A, Low-Dropout Voltage Regulator, 1.425-6.5V Input, Adjustable Min 0.5V Output, PowerPad SO-8","U4,U3",TI_SO-PowerPAD-8_ThermalVias,C60719
+"TPS54331D 3A, Step Down DC-DC Converter with Eco-mode, 3.5-28V Input Voltage, SO-8","U3,U4",SOIC-8_3.9x4.9mm_P1.27mm,C9865
 RTL8211EG-VB-CG 10/100/1000Mbps Ethernet Transceiver with RGMII/GMII/MII/RMII Interface,U5,QFN-64-1EP_9x9mm_P0.5mm_EP3.8x3.8mm_ThermalVias,C69264
 "W25Q128JVS 128Mb Serial Flash Memory, Standard/Dual/Quad SPI, SOIC-8",U7,SOIC-8_5.23x5.23mm_P1.27mm,C97521
 "M24C01-RMN 1Kb (128x8) I2C Serial EEPROM, 1.8-5.5V, SOIC-8",U8,SOIC-8_3.9x4.9mm_P1.27mm,C79988
-SG-7050CAN CMOS Clock Oscillator,"X1,X2",Oscillator_SMD_SeikoEpson_SG8002CA-4Pin_7.0x5.0mm,C70528
+"SRV05-4 ESD Protection Diodes with Low Clamping Voltage, SOT-23-6","U9,U10,U11,U12,U14,U13,U15",SOT-23-6,C85364
+SG-7050CAN CMOS Clock Oscillator 1 to 75 MHz,"X1,X2",Oscillator_SMD_SeikoEpson_SG8002CA-4Pin_7.0x5.0mm,C70528

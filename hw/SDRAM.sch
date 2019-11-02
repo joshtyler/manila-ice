@@ -5,9 +5,9 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 2 11
-Title ""
+Title "manila iCE"
 Date ""
-Rev ""
+Rev "1.0"
 Comp ""
 Comment1 ""
 Comment2 ""

@@ -5,15 +5,46 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 11 11
-Title ""
+Title "manila iCE"
 Date ""
-Rev ""
+Rev "1.0"
 Comp ""
 Comment1 ""
 Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
+$Comp
+L Device:C C?
+U 1 1 5DB0201A
+P 4750 3250
+AR Path="/5D7E2E67/5DB0201A" Ref="C?"  Part="1" 
+AR Path="/5DAFE486/5DB0201A" Ref="C40"  Part="1" 
+AR Path="/5DB28A3C/5DB0201A" Ref="C50"  Part="1" 
+F 0 "C50" H 4865 3296 50  0000 L CNN
+F 1 "10n" H 4865 3205 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 4788 3100 50  0001 C CNN
+F 3 "~" H 4750 3250 50  0001 C CNN
+F 4 "0" H 4865 3396 50  0001 C CNN "JLCPCB Rotation"
+F 5 "C57112" H 4865 3396 50  0001 C CNN "LCSC Part"
+	1    4750 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5DB02020
+P 4750 3450
+AR Path="/5DB02020" Ref="#PWR?"  Part="1" 
+AR Path="/5D7E2E67/5DB02020" Ref="#PWR?"  Part="1" 
+AR Path="/5DAFE486/5DB02020" Ref="#PWR031"  Part="1" 
+AR Path="/5DB28A3C/5DB02020" Ref="#PWR0142"  Part="1" 
+F 0 "#PWR0142" H 4750 3200 50  0001 C CNN
+F 1 "GND" H 4755 3277 50  0000 C CNN
+F 2 "" H 4750 3450 50  0001 C CNN
+F 3 "" H 4750 3450 50  0001 C CNN
+	1    4750 3450
+	1    0    0    -1  
+$EndComp
 $Comp
 L Device:C C?
 U 1 1 5DB02029
@@ -358,6 +389,8 @@ Text Label 5700 2800 0    50   ~ 0
 PH
 Text Label 4100 2900 0    50   ~ 0
 COMP
+Text Label 4750 3000 0    50   ~ 0
+SS
 Text Label 4300 3350 0    50   ~ 0
 COMP_RC
 Text HLabel 5700 3000 2    50   Input ~ 0
@@ -374,6 +407,10 @@ Text Label 5600 2600 0    50   ~ 0
 BOOT
 Wire Wire Line
 	5200 3200 5200 3250
+Wire Wire Line
+	4750 3450 4750 3400
+Wire Wire Line
+	4750 3100 4750 3000
 Wire Wire Line
 	4750 3000 4800 3000
 Wire Wire Line
@@ -472,7 +509,8 @@ Connection ~ 7350 2800
 Connection ~ 3100 2600
 Connection ~ 7900 2800
 Connection ~ 7700 2800
-NoConn ~ 4800 2800
-Text HLabel 4750 3000 0    50   Input ~ 0
-SS
+Wire Wire Line
+	4750 2800 4800 2800
+Text HLabel 4750 2800 0    50   Input ~ 0
+EN
 $EndSCHEMATC

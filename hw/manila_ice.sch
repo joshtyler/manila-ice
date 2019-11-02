@@ -5,9 +5,9 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 11
-Title ""
+Title "manila iCE"
 Date ""
-Rev ""
+Rev "1.0"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -104,6 +104,7 @@ F33 "UART_CTS" O L 5250 4650 50
 F34 "LED[0..7]" O R 7000 5350 50 
 F35 "SDA" B R 7000 5800 50 
 F36 "SCL" B R 7000 5900 50 
+F37 "~WC" O R 7000 6000 50 
 $EndSheet
 $Sheet
 S 7200 4450 550  200 
@@ -127,12 +128,13 @@ F1 "LEDS.sch" 50
 F2 "LEDS[0..7]" I L 7200 5350 50 
 $EndSheet
 $Sheet
-S 8500 5700 750  300 
+S 8900 5700 750  400 
 U 5DAA4BA2
 F0 "EEPROM" 50
 F1 "EEPROM.sch" 50
-F2 "SDA" B L 8500 5800 50 
-F3 "SCL" B L 8500 5900 50 
+F2 "SDA" B L 8900 5800 50 
+F3 "SCL" B L 8900 5900 50 
+F4 "~WC" I L 8900 6000 50 
 $EndSheet
 $Sheet
 S 3650 3050 800  550 
@@ -142,17 +144,7 @@ F1 "REGULATOR.sch" 50
 F2 "FB" I R 4450 3500 50 
 F3 "VOUT" U R 4450 3100 50 
 F4 "VIN" U L 3650 3100 50 
-F5 "SS" I L 3650 3500 50 
-$EndSheet
-$Sheet
-S 3650 1750 800  550 
-U 5DB28A3C
-F0 "3V3_REG" 50
-F1 "REGULATOR.sch" 50
-F2 "FB" I R 4450 2200 50 
-F3 "VOUT" U R 4450 1800 50 
-F4 "VIN" U L 3650 1800 50 
-F5 "SS" I L 3650 2200 50 
+F5 "EN" I L 3650 3500 50 
 $EndSheet
 $Comp
 L Device:R R1
@@ -366,16 +358,16 @@ $EndComp
 $Comp
 L Device:R R?
 U 1 1 5DAF8A15
-P 8250 5400
+P 8300 5400
 AR Path="/5D7C5FBE/5DAF8A15" Ref="R?"  Part="1" 
 AR Path="/5DAF8A15" Ref="R41"  Part="1" 
-F 0 "R41" H 8320 5446 50  0000 L CNN
-F 1 "10k" H 8320 5355 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 8180 5400 50  0001 C CNN
-F 3 "~" H 8250 5400 50  0001 C CNN
-F 4 "0" H 8320 5546 50  0001 C CNN "JLCPCB Rotation"
-F 5 "C25804" H 8320 5546 50  0001 C CNN "LCSC Part"
-	1    8250 5400
+F 0 "R41" H 8370 5446 50  0000 L CNN
+F 1 "10k" H 8370 5355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 8230 5400 50  0001 C CNN
+F 3 "~" H 8300 5400 50  0001 C CNN
+F 4 "0" H 8370 5546 50  0001 C CNN "JLCPCB Rotation"
+F 5 "C25804" H 8370 5546 50  0001 C CNN "LCSC Part"
+	1    8300 5400
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -754,23 +746,17 @@ Wire Wire Line
 Wire Wire Line
 	8000 5200 8150 5200
 Wire Wire Line
-	8250 5200 8250 5250
+	8300 5200 8300 5250
 Wire Wire Line
 	8150 5150 8150 5200
 Wire Wire Line
-	8150 5200 8250 5200
+	8150 5200 8300 5200
 Wire Wire Line
 	7000 5800 8000 5800
 Wire Wire Line
-	8500 5900 8250 5900
-Wire Wire Line
 	8000 5550 8000 5800
 Wire Wire Line
-	8000 5800 8500 5800
-Wire Wire Line
-	8250 5550 8250 5900
-Wire Wire Line
-	8250 5900 7000 5900
+	8000 5800 8900 5800
 Wire Wire Line
 	4600 3900 4600 3850
 Wire Wire Line
@@ -854,7 +840,6 @@ Connection ~ 3150 1600
 Connection ~ 2300 1600
 Connection ~ 8150 5200
 Connection ~ 8000 5800
-Connection ~ 8250 5900
 Connection ~ 4600 3100
 Connection ~ 4600 3500
 Connection ~ 4600 1800
@@ -864,82 +849,114 @@ Connection ~ 2900 1600
 Connection ~ 2500 4200
 Connection ~ 2550 3450
 NoConn ~ 1150 4200
+Text Notes 500  7300 0    50   ~ 0
+The iCE40 FPGA will start configuration once power rails are in range.\nIt considers the SPI voltage to be in range once it reaches 1V8, but our flash chip will not work until the 3V3 rail reaches 2V7.\n\nWe get around this by sequencing the 1V2 rail to only come up after the 3V3 is good. This avoids extra circuitry to hold ~CRESET~ low until the rails are stable.\n\nThis is acceptable becuase the iCE40 doesn't require a particular power sequencing order.\n\nThis works by (ab)using the EN pin of the power supply. It has hyseresis built in designed to only enable the supply when the input is in the correct voltage range.\nThe chosen resistor values turn the 1.2V supply on once the 3V3 supply is greater than 3.2V, but only turn it off again once the 3.3V supply has fallen below 2.13V.\n\nWe could probably get away without this, because the iCE40 automatically retries six times to get around power sequencing issues.\n(TN1248 p.17\nIt is best to design robustly however, and only requires two extra resistors.
+$Sheet
+S 3650 1750 800  550 
+U 5DB28A3C
+F0 "3V3_REG" 50
+F1 "REGULATOR.sch" 50
+F2 "FB" I R 4450 2200 50 
+F3 "VOUT" U R 4450 1800 50 
+F4 "VIN" U L 3650 1800 50 
+F5 "EN" I L 3650 2200 50 
+$EndSheet
+NoConn ~ 3650 2200
 $Comp
-L Device:C C?
-U 1 1 5DBEC469
-P 3300 3750
-AR Path="/5D7E2E67/5DBEC469" Ref="C?"  Part="1" 
-AR Path="/5DAFE486/5DBEC469" Ref="C?"  Part="1" 
-AR Path="/5DB28A3C/5DBEC469" Ref="C?"  Part="1" 
-AR Path="/5DBEC469" Ref="C40"  Part="1" 
-F 0 "C40" H 3415 3796 50  0000 L CNN
-F 1 "22n" H 3415 3705 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 3338 3600 50  0001 C CNN
-F 3 "~" H 3300 3750 50  0001 C CNN
-F 4 "0" H 3415 3896 50  0001 C CNN "JLCPCB Rotation"
-F 5 "C21122" H 3415 3896 50  0001 C CNN "LCSC Part"
-	1    3300 3750
+L Device:R R45
+U 1 1 5DE79830
+P 3250 3300
+F 0 "R45" H 3320 3346 50  0000 L CNN
+F 1 "360k" H 3320 3255 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 3180 3300 50  0001 C CNN
+F 3 "~" H 3250 3300 50  0001 C CNN
+F 4 "0" H 3320 3446 50  0001 C CNN "JLCPCB Rotation"
+F 5 "C23146" H 3320 3446 50  0001 C CNN "LCSC Part"
+	1    3250 3300
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR?
-U 1 1 5DBEC46F
-P 3300 3950
-AR Path="/5DBEC46F" Ref="#PWR?"  Part="1" 
-AR Path="/5D7E2E67/5DBEC46F" Ref="#PWR?"  Part="1" 
-AR Path="/5DAFE486/5DBEC46F" Ref="#PWR?"  Part="1" 
-AR Path="/5DB28A3C/5DBEC46F" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3300 3700 50  0001 C CNN
-F 1 "GND" H 3305 3777 50  0000 C CNN
-F 2 "" H 3300 3950 50  0001 C CNN
-F 3 "" H 3300 3950 50  0001 C CNN
-	1    3300 3950
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3300 3950 3300 3900
-Text Notes 850  7150 0    50   ~ 0
-The iCE40 FPGA will start configuration once power rails are in range.\nIt considers the SPI voltage to be in range once it reaches 1V8, but our flash chip will not work until the 3V3 rail reaches 2V7.\n\nWe get around this by choosing SS capacitors such that the 1V2 rail will rise much slower than the 3V3 rail.\nThis avoids extra circuitry to hold ~CRESET~ low until the rails are stable.\n\nThis is acceptable becuase the iCE40 doesn't require a particular power sequencing order.\n\n3V3 rail will start in 1.3ms. 1V2 will start in 8.8ms.
-Wire Wire Line
-	3300 3600 3300 3500
-Wire Wire Line
-	3300 3500 3650 3500
-$Comp
-L Device:C C?
-U 1 1 5DC132A2
-P 3300 2450
-AR Path="/5D7E2E67/5DC132A2" Ref="C?"  Part="1" 
-AR Path="/5DAFE486/5DC132A2" Ref="C?"  Part="1" 
-AR Path="/5DB28A3C/5DC132A2" Ref="C?"  Part="1" 
-AR Path="/5DC132A2" Ref="C50"  Part="1" 
-F 0 "C50" H 3415 2496 50  0000 L CNN
-F 1 "3.3n" H 3415 2405 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 3338 2300 50  0001 C CNN
-F 3 "~" H 3300 2450 50  0001 C CNN
-F 4 "0" H 3415 2596 50  0001 C CNN "JLCPCB Rotation"
-F 5 "C1613" H 3415 2596 50  0001 C CNN "LCSC Part"
-	1    3300 2450
+L Device:R R46
+U 1 1 5DE79838
+P 3250 3700
+F 0 "R46" H 3320 3746 50  0000 L CNN
+F 1 "180k" H 3320 3655 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 3180 3700 50  0001 C CNN
+F 3 "~" H 3250 3700 50  0001 C CNN
+F 4 "0" H 3320 3846 50  0001 C CNN "JLCPCB Rotation"
+F 5 "C22827" H 3320 3846 50  0001 C CNN "LCSC Part"
+	1    3250 3700
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR?
-U 1 1 5DC132A8
-P 3300 2650
-AR Path="/5DC132A8" Ref="#PWR?"  Part="1" 
-AR Path="/5D7E2E67/5DC132A8" Ref="#PWR?"  Part="1" 
-AR Path="/5DAFE486/5DC132A8" Ref="#PWR?"  Part="1" 
-AR Path="/5DB28A3C/5DC132A8" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 3300 2400 50  0001 C CNN
-F 1 "GND" H 3305 2477 50  0000 C CNN
-F 2 "" H 3300 2650 50  0001 C CNN
-F 3 "" H 3300 2650 50  0001 C CNN
-	1    3300 2650
+L power:GND #PWR0160
+U 1 1 5DE7983E
+P 3250 3900
+AR Path="/5DE7983E" Ref="#PWR0160"  Part="1" 
+AR Path="/5D7E2E67/5DE7983E" Ref="#PWR?"  Part="1" 
+F 0 "#PWR0160" H 3250 3650 50  0001 C CNN
+F 1 "GND" H 3255 3727 50  0000 C CNN
+F 2 "" H 3250 3900 50  0001 C CNN
+F 3 "" H 3250 3900 50  0001 C CNN
+	1    3250 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR0161
+U 1 1 5DE79844
+P 3250 3050
+AR Path="/5DE79844" Ref="#PWR0161"  Part="1" 
+AR Path="/5D7E2E67/5DE79844" Ref="#PWR?"  Part="1" 
+F 0 "#PWR0161" H 3250 2900 50  0001 C CNN
+F 1 "+3.3V" H 3265 3223 50  0000 C CNN
+F 2 "" H 3250 3050 50  0001 C CNN
+F 3 "" H 3250 3050 50  0001 C CNN
+	1    3250 3050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3300 2650 3300 2600
+	3250 3900 3250 3850
 Wire Wire Line
-	3300 2300 3300 2200
+	3250 3050 3250 3150
 Wire Wire Line
-	3300 2200 3650 2200
+	3250 3450 3250 3500
+Wire Wire Line
+	3650 3500 3250 3500
+Connection ~ 3250 3500
+Wire Wire Line
+	3250 3500 3250 3550
+$Comp
+L Device:R R?
+U 1 1 5E000C80
+P 8600 5400
+AR Path="/5D7C5FBE/5E000C80" Ref="R?"  Part="1" 
+AR Path="/5E000C80" Ref="R48"  Part="1" 
+F 0 "R48" H 8670 5446 50  0000 L CNN
+F 1 "10k" H 8670 5355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 8530 5400 50  0001 C CNN
+F 3 "~" H 8600 5400 50  0001 C CNN
+F 4 "0" H 8670 5546 50  0001 C CNN "JLCPCB Rotation"
+F 5 "C25804" H 8670 5546 50  0001 C CNN "LCSC Part"
+	1    8600 5400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8600 5200 8600 5250
+Wire Wire Line
+	8600 5200 8300 5200
+Connection ~ 8300 5200
+Wire Wire Line
+	7000 5900 8300 5900
+Wire Wire Line
+	7000 6000 8600 6000
+Wire Wire Line
+	8300 5550 8300 5900
+Connection ~ 8300 5900
+Wire Wire Line
+	8300 5900 8900 5900
+Wire Wire Line
+	8600 5550 8600 6000
+Connection ~ 8600 6000
+Wire Wire Line
+	8600 6000 8900 6000
 $EndSCHEMATC

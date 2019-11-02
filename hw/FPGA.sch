@@ -5,9 +5,9 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 5 11
-Title ""
+Title "manila iCE"
 Date ""
-Rev ""
+Rev "1.0"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -1471,9 +1471,9 @@ Text Label 5400 7450 0    50   ~ 0
 GNDPLL1
 Text Label 6250 7500 0    50   ~ 0
 GNDPLL0
-Text HLabel 750  3350 0    50   BiDi ~ 0
+Text HLabel 750  3400 0    50   BiDi ~ 0
 SDA
-Text HLabel 750  3250 0    50   BiDi ~ 0
+Text HLabel 750  3200 0    50   Output ~ 0
 SCL
 Wire Wire Line
 	4000 5900 4000 6000
@@ -1980,17 +1980,7 @@ Wire Wire Line
 Wire Wire Line
 	3250 2450 3800 2450
 Wire Wire Line
-	1250 3350 1250 3450
-Wire Wire Line
-	1250 3450 1750 3450
-Wire Wire Line
-	750  3250 1300 3250
-Wire Wire Line
-	1300 3250 1300 3350
-Wire Wire Line
-	1300 3350 1750 3350
-Wire Wire Line
-	750  3350 1250 3350
+	1200 3450 1750 3450
 Wire Wire Line
 	1750 5850 1750 5900
 Wire Wire Line
@@ -2161,15 +2151,14 @@ Connection ~ 1750 6700
 NoConn ~ 4200 6000
 NoConn ~ 1100 7400
 NoConn ~ 1100 7000
-NoConn ~ 1750 3250
 $Comp
 L Device:C C?
 U 1 1 5DCE77EA
 P 10200 4300
 AR Path="/5DCE77EA" Ref="C?"  Part="1" 
 AR Path="/5D7E2E67/5DCE77EA" Ref="C?"  Part="1" 
-AR Path="/5D7C5FBE/5DCE77EA" Ref="C?"  Part="1" 
-F 0 "C?" H 10315 4346 50  0000 L CNN
+AR Path="/5D7C5FBE/5DCE77EA" Ref="C56"  Part="1" 
+F 0 "C56" H 10315 4346 50  0000 L CNN
 F 1 "100n" H 10315 4255 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 10238 4150 50  0001 C CNN
 F 3 "~" H 10200 4300 50  0001 C CNN
@@ -2179,10 +2168,10 @@ F 5 "C14663" H 10315 4446 50  0001 C CNN "LCSC Part"
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0162
 U 1 1 5DCF0F7A
 P 10200 4500
-F 0 "#PWR?" H 10200 4250 50  0001 C CNN
+F 0 "#PWR0162" H 10200 4250 50  0001 C CNN
 F 1 "GND" H 10205 4327 50  0000 C CNN
 F 2 "" H 10200 4500 50  0001 C CNN
 F 3 "" H 10200 4500 50  0001 C CNN
@@ -2192,10 +2181,10 @@ $EndComp
 Wire Wire Line
 	10200 4450 10200 4500
 $Comp
-L Device:R R?
+L Device:R R47
 U 1 1 5DD07541
 P 9850 4100
-F 0 "R?" V 9750 4000 50  0000 L CNN
+F 0 "R47" V 9750 4000 50  0000 L CNN
 F 1 "100" V 9950 4000 50  0000 L CNN
 F 2 "Resistor_SMD:R_0603_1608Metric" V 9780 4100 50  0001 C CNN
 F 3 "~" H 9850 4100 50  0001 C CNN
@@ -2217,6 +2206,24 @@ Wire Wire Line
 	9400 4100 9400 4150
 Text Notes 7100 5050 0    50   ~ 0
 ~CRESET~ is hardware debounced to avoid a series of pulses on the reset pin.\nThe CBSEL pins are not becuase they will either be held (if used as CBSEL), or debounced in FPGA logic.
+Text HLabel 750  3300 0    50   Output ~ 0
+~WC
+Wire Wire Line
+	1250 3350 1750 3350
+Wire Wire Line
+	750  3200 950  3200
+Wire Wire Line
+	950  3200 950  3250
+Wire Wire Line
+	950  3250 1750 3250
+Wire Wire Line
+	750  3300 1250 3300
+Wire Wire Line
+	1250 3300 1250 3350
+Wire Wire Line
+	750  3400 1200 3400
+Wire Wire Line
+	1200 3400 1200 3450
 Wire Bus Line
 	5600 3800 5600 4650
 Wire Bus Line

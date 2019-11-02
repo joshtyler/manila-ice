@@ -5,9 +5,9 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 4 11
-Title ""
+Title "manila iCE"
 Date ""
-Rev ""
+Rev "1.0"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -1275,10 +1275,6 @@ Wire Wire Line
 	9300 4750 9600 4750
 Wire Wire Line
 	10600 4950 10700 4950
-Wire Bus Line
-	2450 3600 2450 4350
-Wire Bus Line
-	4450 2400 4450 3150
 Entry Wire Line
 	4450 2450 4550 2550
 Entry Wire Line
@@ -1349,4 +1345,8 @@ Connection ~ 10000 3600
 NoConn ~ 5000 5150
 NoConn ~ 8050 4350
 NoConn ~ 10100 4350
+Wire Bus Line
+	2450 3600 2450 4350
+Wire Bus Line
+	4450 2400 4450 3150
 $EndSCHEMATC

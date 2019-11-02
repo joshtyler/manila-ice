@@ -5,9 +5,9 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 9 11
-Title ""
+Title "manila iCE"
 Date ""
-Rev ""
+Rev "1.0"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -94,7 +94,7 @@ F 3 "" H 4500 3450 50  0001 C CNN
 $EndComp
 Text HLabel 6450 3300 2    50   BiDi ~ 0
 SDA
-Text HLabel 6450 3400 2    50   BiDi ~ 0
+Text HLabel 6450 3400 2    50   Input ~ 0
 SCL
 Text Notes 4600 2300 0    50   ~ 0
 TODO: Change for real part: M24C64-RMN6TP\nJLC C79988
@@ -119,12 +119,6 @@ Wire Wire Line
 Wire Wire Line
 	5600 3050 5600 3100
 Wire Wire Line
-	6000 3500 6050 3500
-Wire Wire Line
-	6050 3500 6050 3750
-Wire Wire Line
-	6050 3750 5600 3750
-Wire Wire Line
 	6000 3400 6450 3400
 Wire Wire Line
 	6000 3300 6450 3300
@@ -135,5 +129,8 @@ Wire Wire Line
 Connection ~ 5150 3400
 Connection ~ 5150 3500
 Connection ~ 5150 3750
-Connection ~ 5600 3750
+Text HLabel 6450 3500 2    50   Input ~ 0
+~WC
+Wire Wire Line
+	6000 3500 6450 3500
 $EndSCHEMATC

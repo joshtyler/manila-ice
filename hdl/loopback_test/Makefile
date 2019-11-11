@@ -24,9 +24,9 @@ COMMON_SYNTH_DIR = ./hdl_common/synth
 
 # Input files
 SRC_FILES += $(SRC_DIR)/top.sv
-SRC_FILES += $(SRC_DIR)/logic_cross_clock.sv
-SRC_FILES += $(SRC_DIR)/uart_rx.sv
-SRC_FILES += $(SRC_DIR)/uart_tx.sv
+SRC_FILES += $(COMMON_SYNTH_DIR)/other/logic_cross_clock.sv
+SRC_FILES += $(COMMON_SYNTH_DIR)/other/uart_rx.sv
+SRC_FILES += $(COMMON_SYNTH_DIR)/other/uart_tx.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/reset_gen.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/fifo.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/axis/axis_fifo.sv
@@ -59,7 +59,7 @@ prog: $(PROJ).bin
 	iceprog $<
 
 clean:
-	rm -f $(PROJ).json $(PROJ).asc $(PROJ).rpt $(PROJ).bin
+	rm -f $(PROJ).json $(PROJ).asc $(PROJ).rpt $(PROJ).bin yosys.log
 
 .SECONDARY:
 .PHONY: all clean prog time

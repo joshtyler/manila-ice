@@ -1,15 +1,17 @@
 # HX8k Dev board constraints
 
-set_io leds[0] B5
-set_io leds[1] B4
-set_io leds[2] A2
-set_io leds[3] A1
-set_io leds[4] C5
-set_io leds[5] C4
-set_io leds[6] B3
-set_io leds[7] C3
+set_io leds[0] 110
+set_io leds[1] 112
+set_io leds[2] 113
+set_io leds[3] 114
+set_io leds[4] 115
+set_io leds[5] 116
+set_io leds[6] 117
+set_io leds[7] 118
 
-set_io clk J3
+set_io clk 49
 
-set_io uart_tx B12
-set_io uart_rx B10
+set_io uart_tx 52
+set_io uart_rx 55
+
+set_io eth_phyrst 93

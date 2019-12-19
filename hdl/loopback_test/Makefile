@@ -18,7 +18,7 @@
 SRC_DIR = ./src
 PROJ = loopback_test
 DEVICE = 8k
-PACKAGE = ct256
+PACKAGE = tq144:4k
 
 COMMON_SYNTH_DIR = ./hdl_common/synth
 
@@ -47,7 +47,7 @@ all: $(PROJ).rpt $(PROJ).bin
 
 %.asc: $(PCF_FILE) %.json
 	@echo "Begin pnr"
-	nextpnr-ice40 --hx8k --json $(PROJ).json --pcf $(PCF_FILE) --asc $(PROJ).asc --pre-pack ./src/clk.py
+	nextpnr-ice40 --hx8k --package $(PACKAGE) --json $(PROJ).json --pcf $(PCF_FILE) --asc $(PROJ).asc --pre-pack ./src/clk.py
 
 %.bin: %.asc
 	icepack $< $@

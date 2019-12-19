@@ -1,23 +1,27 @@
 // Simple loopback test
 // Receive bits and loop them back to the input, but with case inverted
 
-module top
+module loopback_test
 (
 	input logic clk,
 
 	input logic uart_rx,
 	output logic uart_tx,
 
-	output logic [7:0] leds
+	output logic [7:0] leds,
+	output logic eth_phyrst
 );
 
-localparam integer CLK_FREQ = 12e6;
+localparam integer CLK_FREQ = $rtoi(50e6);
 localparam integer UART_BAUD_RATE = 9600;
 
 // Generate a power on reset
 logic sresetn;
 reset_gen #(.POLARITY(0)) reset_gen (.clk(clk), .en(1), .sreset(sresetn));
 
+
+// Turn ethernet phy on
+assign eth_phyrst  = 1;
 
 // UARTs
 logic parallel_data_valid;
@@ -37,15 +41,24 @@ uart_rx
 );
 
 // Display last received byte on LEDs
+logic [7:0] parallel_data_latch;
 always_ff @(posedge clk)
 begin
 	if(!sresetn)
 	begin
-		leds <= 0;
+		parallel_data_latch <= 0;
 	end else if(parallel_data_valid) begin
-		leds <= parallel_data;
+		parallel_data_latch <= parallel_data;
 	end
 end
+
+// Make the top LED blink
+logic [24:0] ctr;
+always_ff @(posedge clk)
+begin
+	ctr <= ctr + 1;
+end
+assign leds = { ctr[24], parallel_data_latch[6:0] };
 
 logic uart_tx_tready;
 logic uart_tx_tvalid;

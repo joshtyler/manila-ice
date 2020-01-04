@@ -13,8 +13,15 @@ int main(int argc, char** argv)
 
 	VerilatedModel<Vloopback_test> uut(argc,argv,recordVcd);
 
-	ClockGen clk(uut.getTime(), 1e-9, 50e6);
-	Uart<vluint8_t> uart(uut.uut->uart_tx, uut.uut->uart_rx);
+	const double timeinterval = 1e-9;
+
+	ClockGen clk(uut.getTime(), timeinterval, 50e6);
+
+	const int bit_interval = static_cast<int>((1.0/9600.0)/timeinterval);
+
+	std::cout  << "Bit interval: " << bit_interval << std::endl;
+
+	Uart<vluint8_t> uart(uut.uut->uart_tx, uut.uut->uart_rx, bit_interval);
 
 
 	uut.addPeripheral(&uart);
@@ -32,7 +39,7 @@ int main(int argc, char** argv)
 		if(uut.getTime() == 10000000)
 		{
 			std::cout << "Timed out" << std::endl;
-			break;
+			//break;
 		}
 	}
 }

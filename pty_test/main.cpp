@@ -19,7 +19,7 @@ int main(void)
 	while(1)
 	{
 		char data[128];
-		ret = read(fd, data, sizeof(data)-1);
+		ret = read(fd, data, sizeof(data)-1); // N.B. this blocks!
 		if(ret > 0)
 		{
 			// Null terminate to make into string

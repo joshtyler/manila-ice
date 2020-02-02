@@ -4,9 +4,9 @@
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 
-#include "../../loopback_test/hdl_common/sim/verilator/VerilatedModel.hpp"
-#include "../../loopback_test/hdl_common/sim/other/ClockGen.hpp"
-#include "../../loopback_test/hdl_common/sim/other/Uart.hpp"
+#include "verilator/VerilatedModel.hpp"
+#include "other/ClockGen.hpp"
+#include "other/Uart.hpp"
 
 int main(int argc, char** argv)
 {

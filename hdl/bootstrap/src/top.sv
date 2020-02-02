@@ -102,6 +102,7 @@ simple_wb_slave
 	.clk(clk),
 	.sresetn(sresetn),
 	.wb(wb),
+	.regs(),
 	.leds(leds)
 );
 

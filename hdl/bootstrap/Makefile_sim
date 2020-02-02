@@ -1,0 +1,27 @@
+VERILATOR = verilator
+VERILATOR_FLAGS = --trace --cc --exe --l2-name v -CFLAGS '-Wall -Wextra -g'
+
+VERILOG_TOP = top
+VERILOG_SOURCES = src/top.sv \
+../loopback_test/hdl_common/synth/other/reset_gen.sv \
+../loopback_test/hdl_common/synth/other/fifo.sv \
+../loopback_test/hdl_common/synth/axis/axis_fifo.sv \
+../loopback_test/hdl_common/synth/axis/axis_register.sv \
+../loopback_test/hdl_common/synth/other/uart_rx.sv \
+../loopback_test/hdl_common/synth/other/uart_tx.sv \
+../loopback_test/hdl_common/synth/other/logic_cross_clock.sv \
+../loopback_test/hdl_common/synth/wishbone/wishbone.sv \
+../loopback_test/hdl_common/synth/wishbone/serial_wb_master.sv \
+../loopback_test/hdl_common/synth/wishbone/simple_wb_slave.sv
+
+CPP_SOURCES = tb/test_bootstrap.cpp
+
+default : run
+
+run:
+	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILOG_SOURCES) --top-module $(VERILOG_TOP) $(CPP_SOURCES)
+
+	$(MAKE) -j 4 -C obj_dir -f Vtop.mk
+
+clean:
+	rm -r obj_dir

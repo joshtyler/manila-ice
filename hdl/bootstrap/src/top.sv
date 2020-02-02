@@ -10,7 +10,9 @@ module top
 	output logic [7:0] leds
 );
 
-localparam integer CLK_FREQ = 12e6;
+/* verilator lint_off REALCVT */
+localparam integer CLK_FREQ = 50e6; // Can't use int'(50e6) because yosys doesn't support
+/* verilator lint_on REALCVT */
 localparam integer UART_BAUD_RATE = 9600;
 
 // Generate a power on reset
@@ -35,16 +37,10 @@ uart_rx
 	.parallel_data(parallel_data)
 );
 
-// Display last received byte on LEDs
-always_ff @(posedge clk)
-begin
-	if(!sresetn)
-	begin
-		leds <= 0;
-	end else if(parallel_data_valid) begin
-		leds <= parallel_data;
-	end
-end
+logic uart_rx_tready;
+logic uart_rx_tvalid;
+logic uart_rx_tlast;
+logic [7:0] uart_rx_tdata;
 
 logic uart_tx_tready;
 logic uart_tx_tvalid;
@@ -64,11 +60,52 @@ axis_fifo
 	.axis_i_tdata(parallel_data),
 
 	// Output
+	.axis_o_tready(uart_rx_tready),
+	.axis_o_tvalid(uart_rx_tvalid),
+	.axis_o_tlast(uart_rx_tlast),
+	.axis_o_tdata(uart_rx_tdata)
+);
+
+wishbone wb();
+
+//logic [wb.BYTES*8-1:0] regs [2**wb.ADDR_BITS-1:0];
+//logic [8-1:0] regs [2**8-1:0];
+
+serial_wb_master
+#(
+	.BYTES(1),
+	.ADDR_BITS(8)
+) serial_wb_master_inst (
+	.clk(clk),
+	.sresetn(sresetn),
+
+	.axis_i_tready(uart_rx_tready),
+	.axis_i_tvalid(uart_rx_tvalid),
+	.axis_i_tlast(uart_rx_tlast),
+	.axis_i_tdata(uart_rx_tdata),
+
+	// Output
 	.axis_o_tready(uart_tx_tready),
 	.axis_o_tvalid(uart_tx_tvalid),
 	.axis_o_tlast(),
-	.axis_o_tdata(uart_tx_tdata)
+	.axis_o_tdata(uart_tx_tdata),
+
+	.wb(wb)
 );
+
+//logic [(2**8)*1-1:0]  regs;
+simple_wb_slave
+#(
+	.BYTES(1),
+	.ADDR_BITS(8)
+) wb_slave_inst (
+	.clk(clk),
+	.sresetn(sresetn),
+	.wb(wb),
+	.leds(leds)
+);
+
+//assign leds = regs[7:0];
 
 uart_tx
 #(

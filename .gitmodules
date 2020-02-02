@@ -11,5 +11,5 @@
 	path = hw/outputs/kicad-jlcpcb-bom-plugin
 	url = https://github.com/joshtyler/kicad-jlcpcb-bom-plugin
 [submodule "hdl/loopback_test/hdl_common"]
-	path = hdl/loopback_test/hdl_common
+	path = hdl/hdl_common
 	url = https://github.com/joshtyler/hdl_common.git

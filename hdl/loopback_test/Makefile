@@ -23,7 +23,7 @@ PACKAGE = tq144:4k
 COMMON_SYNTH_DIR = ./hdl_common/synth
 
 # Input files
-SRC_FILES += $(SRC_DIR)/top.sv
+SRC_FILES += $(SRC_DIR)/loopback_test.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/logic_cross_clock.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/uart_rx.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/uart_tx.sv

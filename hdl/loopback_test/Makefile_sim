@@ -1,5 +1,5 @@
 VERILATOR = verilator
-VERILATOR_FLAGS = --trace --cc --exe --l2-name v -CFLAGS '-Wall -Wextra -g'  
+VERILATOR_FLAGS = --trace --cc --exe --l2-name v -CFLAGS '-Wall -Wextra -g'
 
 VERILOG_TOP = loopback_test
 VERILOG_SOURCES = src/loopback_test.sv \

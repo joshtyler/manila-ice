@@ -9,7 +9,7 @@
 
 int main(int argc, char** argv)
 {
-	const bool recordVcd = true;
+	const bool recordVcd = false;
 
 	VerilatedModel<Vloopback_test> uut(argc,argv,recordVcd);
 
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 		// Break on timeout
 		if(uut.getTime() == 10000000)
 		{
-			std::cout << "Timed out" << std::endl;
+			//std::cout << "Timed out" << std::endl;
 			//break;
 		}
 	}

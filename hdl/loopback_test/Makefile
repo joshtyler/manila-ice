@@ -20,7 +20,7 @@ PROJ = loopback_test
 DEVICE = 8k
 PACKAGE = tq144:4k
 
-COMMON_SYNTH_DIR = ./hdl_common/synth
+COMMON_SYNTH_DIR = ../hdl_common/synth
 
 # Input files
 SRC_FILES += $(SRC_DIR)/loopback_test.sv

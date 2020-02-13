@@ -68,9 +68,6 @@ axis_fifo
 
 wishbone wb();
 
-//logic [wb.BYTES*8-1:0] regs [2**wb.ADDR_BITS-1:0];
-//logic [8-1:0] regs [2**8-1:0];
-
 serial_wb_master
 #(
 	.BYTES(1),
@@ -93,20 +90,15 @@ serial_wb_master
 	.wb(wb)
 );
 
-//logic [(2**8)*1-1:0]  regs;
-simple_wb_slave
-#(
-	.BYTES(1),
-	.ADDR_BITS(8)
-) wb_slave_inst (
+wb_to_spi_master spi_inst (
 	.clk(clk),
 	.sresetn(sresetn),
 	.wb(wb),
-	.regs(),
-	.leds(leds)
+	.sck(),
+	.ss(),
+	.miso(1),
+	.mosi()
 );
-
-//assign leds = regs[7:0];
 
 uart_tx
 #(

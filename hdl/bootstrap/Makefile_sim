@@ -12,7 +12,9 @@ VERILOG_SOURCES = src/top.sv \
 ../hdl_common/synth/other/logic_cross_clock.sv \
 ../hdl_common/synth/wishbone/wishbone.sv \
 ../hdl_common/synth/wishbone/serial_wb_master.sv \
-../hdl_common/synth/wishbone/simple_wb_slave.sv
+../hdl_common/synth/wishbone/simple_wb_slave.sv \
+../hdl_common/synth/wishbone/wb_to_spi_master.sv \
+../hdl_common/synth/wishbone/wb_interconnect.sv 
 
 CPP_SOURCES = tb/test_bootstrap.cpp
 

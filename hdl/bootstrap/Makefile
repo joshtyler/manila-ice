@@ -45,7 +45,7 @@ all: $(PROJ).rpt $(PROJ).bin
 %.json: $(SRC_FILES)
 	@echo "Begin synthesis"
 #	yosys -p "synth_ice40; delete t:$$assert; write_json $(PROJ).json" $(SRC_FILES) > yosys.log
-	yosys -p "synth_ice40 -json $(PROJ).json; show" $(SRC_FILES) > yosys.log
+	yosys -p "synth_ice40 -json $(PROJ).json" $(SRC_FILES) > yosys.log
 	@echo "Yosys warnings:"
 	@cat yosys.log | grep -in "warning"
 

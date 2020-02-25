@@ -7,7 +7,12 @@ module top
 	input logic uart_rx,
 	output logic uart_tx,
 
-	output logic [7:0] leds
+	output logic [7:0] leds,
+
+	output logic sck,
+	output logic ss,
+	input logic miso,
+	output logic mosi
 );
 
 /* verilator lint_off REALCVT */
@@ -94,10 +99,10 @@ wb_to_spi_master spi_inst (
 	.clk(clk),
 	.sresetn(sresetn),
 	.wb(wb),
-	.sck(),
-	.ss(),
-	.miso(1),
-	.mosi()
+	.sck(sck),
+	.ss(ss),
+	.miso(miso),
+	.mosi(mosi)
 );
 
 uart_tx

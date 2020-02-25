@@ -7,6 +7,8 @@
 #include "verilator/VerilatedModel.hpp"
 #include "other/ClockGen.hpp"
 #include "other/Uart.hpp"
+#include "other/SpiSlave.hpp"
+#include "other/FlashSpiDevice.hpp"
 
 int main(int argc, char** argv)
 {
@@ -17,6 +19,10 @@ int main(int argc, char** argv)
 	const double timeinterval = 1e-9;
 
 	ClockGen clk(uut.getTime(), timeinterval, 50e6);
+
+	FlashSpiDevice flashDev;
+
+	SpiSlave<vluint8_t,vluint8_t> spiflash(uut.uut->sck, uut.uut->mosi, uut.uut->miso, uut.uut->ss, &flashDev);
 
 	const int bit_interval = static_cast<int>((1.0/9600.0)/timeinterval);
 
@@ -31,9 +37,15 @@ int main(int argc, char** argv)
 	std::vector<unsigned char> dat = {
 		1,1,0x01,  // SS high
 		1,1,0x00,  // SS low
-		1,2,0x55,  // Send data
+		1,2,0x90,  // Send data (read ID)
 		0,2,       // Read result
-		1,2,0xAA,  // Send data
+		1,2,0x00,  // Send data (addr1)
+		0,2,       // Read result
+		1,2,0x00,  // Send data (addr2)
+		0,2,       // Read result
+		1,2,0x00,  // Send data (addr3)
+		0,2,       // Read result
+		1,2,0x00,  // Dummy to get ID
 		0,2,       // Read result
 		1,1,0x01   // SS high
 	};
@@ -41,6 +53,7 @@ int main(int argc, char** argv)
 	uart_tx_file.flush();
 
 	uut.addPeripheral(&uart);
+	uut.addPeripheral(&spiflash);
 	ClockBind clkDriver(clk,uut.uut->clk);
 	uut.addClock(&clkDriver);
 
@@ -52,7 +65,7 @@ int main(int argc, char** argv)
 		}
 
 		// Break on timeout
-		if(uut.getTime() == 35000000)
+		if(uut.getTime() == 70000000)
 		{
 			std::cout << "Timed out" << std::endl;
 			break;

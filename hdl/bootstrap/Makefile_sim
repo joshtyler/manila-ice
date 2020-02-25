@@ -18,7 +18,7 @@ VERILOG_SOURCES = src/top.sv \
 ../hdl_common/synth/wishbone/wb_axis_bridge.sv \
 ../hdl_common/synth/wishbone/wb_interconnect.sv
 
-CPP_SOURCES = tb/test_bootstrap.cpp
+CPP_SOURCES = tb/test_bootstrap.cpp 
 
 default : run
 

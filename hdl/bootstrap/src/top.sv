@@ -12,13 +12,18 @@ module top
 	output logic sck,
 	output logic ss,
 	input logic miso,
-	output logic mosi
+	output logic mosi,
+	output logic hold,
+	output logic wp
 );
+
+assign hold = 1;
+assign wp = 1;
 
 /* verilator lint_off REALCVT */
 localparam integer CLK_FREQ = 50e6; // Can't use int'(50e6) because yosys doesn't support
 /* verilator lint_on REALCVT */
-localparam integer UART_BAUD_RATE = 9600;
+localparam integer UART_BAUD_RATE = 2000000;
 
 // Generate a power on reset
 logic sresetn;
@@ -71,8 +76,20 @@ axis_fifo
 	.axis_o_tdata(uart_rx_tdata)
 );
 
-wishbone wb();
+localparam ADDR_BITS = 8;
+localparam BYTES = 1;
+localparam SEL_WIDTH = 1;
+logic [ADDR_BITS-1:0] wb_addr   ;
+logic [BYTES*8-1:0]   wb_dat_m2s;
+logic [BYTES*8-1:0]   wb_dat_s2m;
+logic                 wb_we     ;
+logic [SEL_WIDTH-1:0] wb_sel    ;
+logic                 wb_stb    ;
+logic                 wb_cyc    ;
+logic                 wb_ack    ;
+logic                 wb_stall  ;
 
+logic [1:0] wb_state;
 serial_wb_master
 #(
 	.BYTES(1),
@@ -92,18 +109,43 @@ serial_wb_master
 	.axis_o_tlast(),
 	.axis_o_tdata(uart_tx_tdata),
 
-	.wb(wb)
+	.m_wb_addr   (wb_addr   ),
+	.m_wb_dat_m2s(wb_dat_m2s),
+	.m_wb_dat_s2m(wb_dat_s2m),
+	.m_wb_we     (wb_we     ),
+	.m_wb_sel    (wb_sel    ),
+	.m_wb_stb    (wb_stb    ),
+	.m_wb_cyc    (wb_cyc    ),
+	.m_wb_ack    (wb_ack    ),
+	.m_wb_stall  (wb_stall  ),
+	.state(wb_state)
 );
 
 wb_to_spi_master spi_inst (
 	.clk(clk),
 	.sresetn(sresetn),
-	.wb(wb),
+	.s_wb_addr   (wb_addr   ),
+	.s_wb_dat_m2s(wb_dat_m2s),
+	.s_wb_dat_s2m(wb_dat_s2m),
+	.s_wb_we     (wb_we     ),
+	.s_wb_sel    (wb_sel    ),
+	.s_wb_stb    (wb_stb    ),
+	.s_wb_cyc    (wb_cyc    ),
+	.s_wb_ack    (wb_ack    ),
+	.s_wb_stall  (wb_stall  ),
 	.sck(sck),
 	.ss(ss),
 	.miso(miso),
 	.mosi(mosi)
 );
+
+always_ff @ (posedge clk)
+begin
+	if(uart_rx_tvalid)
+		leds <= ~uart_rx_tdata;
+	//	leds[5:0] <= uart_rx_tdata[5:0];
+	//leds[7:6] <= wb_state;
+end
 
 uart_tx
 #(

@@ -29,13 +29,15 @@ SRC_FILES += $(COMMON_SYNTH_DIR)/other/reset_gen.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/fifo.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/axis/axis_fifo.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/axis/axis_register.sv
+SRC_FILES += $(COMMON_SYNTH_DIR)/axis/axis_spi_bridge.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/uart_rx.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/uart_tx.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/logic_cross_clock.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/serial_wb_master.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/simple_wb_slave.sv
-
-
+SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/wb_to_spi_master.sv
+SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/wb_axis_bridge.sv
+SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/wb_interconnect.sv
 
 PCF_FILE = $(SRC_DIR)/pins.pcf
 

@@ -15,3 +15,10 @@ set_io uart_tx 52
 set_io uart_rx 55
 
 set_io eth_phyrst 93
+
+set_io mosi 67
+set_io miso 68
+set_io sck  70
+set_io ss  71
+set_io hold  61
+set_io wp   62

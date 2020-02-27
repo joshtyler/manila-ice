@@ -28,6 +28,7 @@ int main(int argc, char** argv)
 
 	Uart<vluint8_t> uart(uut.uut->uart_tx, uut.uut->uart_rx, bit_interval);
 
+
 	std::ofstream uart_tx_file(uart.get_slave_name().c_str(), std::ios::out | std::ios::binary);
 	if(!uart_tx_file)
 	{
@@ -51,6 +52,7 @@ int main(int argc, char** argv)
 	};
 	uart_tx_file.write((char *)dat.data(), dat.size()); // We seem to be sending a couple of bonus characters at the end as well. I'm not sure why...
 	uart_tx_file.flush();
+
 
 	uut.addPeripheral(&uart);
 	uut.addPeripheral(&spiflash);

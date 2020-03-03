@@ -24,11 +24,12 @@ int main(int argc, char** argv)
 
 	SpiSlave<vluint8_t,vluint8_t> spiflash(uut.uut->sck, uut.uut->mosi, uut.uut->miso, uut.uut->ss, &flashDev);
 
-	const int bit_interval = static_cast<int>((1.0/9600.0)/timeinterval);
+	//const int bit_interval = static_cast<int>((1.0/2000000.0)/timeinterval);
+	const int bit_interval = static_cast<int>((1.0/460800.0)/timeinterval);
 
 	Uart<vluint8_t> uart(uut.uut->uart_tx, uut.uut->uart_rx, bit_interval);
 
-
+/*
 	std::ofstream uart_tx_file(uart.get_slave_name().c_str(), std::ios::out | std::ios::binary);
 	if(!uart_tx_file)
 	{
@@ -52,11 +53,11 @@ int main(int argc, char** argv)
 	};
 	uart_tx_file.write((char *)dat.data(), dat.size()); // We seem to be sending a couple of bonus characters at the end as well. I'm not sure why...
 	uart_tx_file.flush();
-
+*/
 
 	uut.addPeripheral(&uart);
 	uut.addPeripheral(&spiflash);
-	ClockBind clkDriver(clk,uut.uut->clk);
+	ClockBind clkDriver(clk,uut.uut->clk_raw);
 	uut.addClock(&clkDriver);
 
 	while(true)
@@ -67,7 +68,7 @@ int main(int argc, char** argv)
 		}
 
 		// Break on timeout
-		if(uut.getTime() == 70000000)
+		if(uut.getTime() == 100000000)
 		{
 			std::cout << "Timed out" << std::endl;
 			break;

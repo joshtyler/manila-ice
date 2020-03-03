@@ -2,7 +2,7 @@
 
 module top
 (
-	input logic clk,
+	input logic clk_raw,
 
 	input logic uart_rx,
 	output logic uart_tx,
@@ -23,11 +23,15 @@ assign wp = 1;
 /* verilator lint_off REALCVT */
 localparam integer CLK_FREQ = 50e6; // Can't use int'(50e6) because yosys doesn't support
 /* verilator lint_on REALCVT */
-localparam integer UART_BAUD_RATE = 2000000;
+localparam integer UART_BAUD_RATE = 460800;
 
 // Generate a power on reset
 logic sresetn;
 reset_gen #(.POLARITY(0)) reset_gen (.clk(clk), .en(1), .sreset(sresetn));
+
+logic clk;
+assign clk = clk_raw;
+//pll pll_inst (.clock_in(clk_raw), .clock_out(clk), .locked());
 
 
 // UARTs
@@ -89,7 +93,7 @@ logic                 wb_cyc    ;
 logic                 wb_ack    ;
 logic                 wb_stall  ;
 
-logic [1:0] wb_state;
+
 serial_wb_master
 #(
 	.BYTES(1),
@@ -117,8 +121,7 @@ serial_wb_master
 	.m_wb_stb    (wb_stb    ),
 	.m_wb_cyc    (wb_cyc    ),
 	.m_wb_ack    (wb_ack    ),
-	.m_wb_stall  (wb_stall  ),
-	.state(wb_state)
+	.m_wb_stall  (wb_stall  )
 );
 
 wb_to_spi_master spi_inst (
@@ -142,9 +145,7 @@ wb_to_spi_master spi_inst (
 always_ff @ (posedge clk)
 begin
 	if(uart_rx_tvalid)
-		leds <= ~uart_rx_tdata;
-	//	leds[5:0] <= uart_rx_tdata[5:0];
-	//leds[7:6] <= wb_state;
+		leds <= uart_rx_tdata;
 end
 
 uart_tx

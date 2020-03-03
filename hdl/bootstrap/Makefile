@@ -24,6 +24,7 @@ COMMON_SYNTH_DIR = ../hdl_common/synth
 
 # Input files
 SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/wishbone.sv
+SRC_FILES += $(SRC_DIR)/pll.sv
 SRC_FILES += $(SRC_DIR)/top.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/reset_gen.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/fifo.sv

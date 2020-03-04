@@ -43,7 +43,7 @@ SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/wb_interconnect.sv
 PCF_FILE = $(SRC_DIR)/pins.pcf
 
 .PHONY: all
-all: $(PROJ).rpt $(PROJ).bin
+all: $(PROJ).rpt $(PROJ).bin multi.bin
 
 %.json: $(SRC_FILES)
 	@echo "Begin synthesis"
@@ -67,6 +67,17 @@ prog: $(PROJ).bin
 
 clean:
 	rm -f $(PROJ).json $(PROJ).asc $(PROJ).rpt $(PROJ).bin yosys.log
+
+# Icemulti makes us have the images we want to boot to ready
+# These files let us fake it
+.INTERMEDIATE: foo bar baz
+foo bar baz :
+	dd if=/dev/zero of=$@ bs=1 count=1
+
+# 16 address bits aligns us with spi flash pages
+# The head command strips out our dummy images
+multi.bin: $(PROJ).bin foo bar baz
+	icemulti -a 16 $(PROJ).bin foo bar baz | head -c 192K > multi.bin
 
 .SECONDARY:
 .PHONY: all clean prog time

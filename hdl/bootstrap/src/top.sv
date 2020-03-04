@@ -142,11 +142,13 @@ wb_to_spi_master spi_inst (
 	.mosi(mosi)
 );
 
+/*
 always_ff @ (posedge clk)
 begin
 	if(uart_rx_tvalid)
 		leds <= uart_rx_tdata;
 end
+*/
 
 uart_tx
 #(
@@ -161,6 +163,45 @@ uart_tx
 	.s_axis_tready(uart_tx_tready),
 	.s_axis_tvalid(uart_tx_tvalid),
 	.s_axis_tdata(uart_tx_tdata)
+);
+
+
+// Automatically boot into next image
+localparam CTR_BITS = 28;
+logic [CTR_BITS-1:0] ctr;
+logic boot;
+
+logic disable_boot;
+
+always @(posedge clk)
+	if(!sresetn) begin
+		disable_boot <= 0;
+		ctr <= 0;
+	end else begin
+		if(!disable_boot) begin
+			ctr <= ctr + 1;
+		end
+
+		if(parallel_data_valid) begin
+			disable_boot <= 1;
+		end
+	end
+
+genvar i;
+generate
+	for(i=0; i<8;i++)
+		always @(posedge clk)
+			if(ctr == 0)
+				leds[i] <= 0;
+			else if(ctr > ((2**(CTR_BITS-1))/8)*i)
+				leds[i] <= 1;
+endgenerate
+assign boot = (ctr[CTR_BITS-1]);
+
+SB_WARMBOOT warmboot (
+	.BOOT(boot),
+	.S0(1),
+	.S1(0)
 );
 
 endmodule

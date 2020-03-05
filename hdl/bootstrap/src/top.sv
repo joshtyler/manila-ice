@@ -4,8 +4,10 @@ module top
 (
 	input logic clk_raw,
 
-	input logic uart_rx,
+	input  logic uart_rx,
 	output logic uart_tx,
+	input  logic rts_n,
+	output logic cts_n,
 
 	output logic [7:0] leds,
 
@@ -13,12 +15,12 @@ module top
 	output logic ss,
 	input logic miso,
 	output logic mosi,
-	output logic hold,
-	output logic wp
+	output logic hold_n,
+	output logic wp_n
 );
 
-assign hold = 1;
-assign wp = 1;
+assign hold_n = 1;
+assign wp_n = 1;
 
 /* verilator lint_off REALCVT */
 localparam integer CLK_FREQ = 50e6; // Can't use int'(50e6) because yosys doesn't support
@@ -60,6 +62,9 @@ logic uart_tx_tready;
 logic uart_tx_tvalid;
 logic [7:0] uart_tx_tdata;
 
+// Our FIFO is sufficiently deep that we are always ready to recieve
+// In the future we should tie this to a FIFO nearly full line
+assign cts_n = 0;
 axis_fifo
 #(
 	.AXIS_BYTES(1),
@@ -68,7 +73,7 @@ axis_fifo
 	.clk(clk),
 	.sresetn(sresetn),
 
-	.axis_i_tready(), // If it fills up we will just drop data
+	.axis_i_tready(),
 	.axis_i_tvalid(parallel_data_valid),
 	.axis_i_tlast(1),
 	.axis_i_tdata(parallel_data),
@@ -158,6 +163,7 @@ uart_tx
 	.clk(clk),
 	.sresetn(sresetn),
 
+	.serial_ready(!rts_n),
 	.serial_data(uart_tx),
 
 	.s_axis_tready(uart_tx_tready),

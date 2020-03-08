@@ -14,8 +14,8 @@ set_io clk_raw 49
 set_io uart_tx 52
 set_io uart_rx 55
 
-set_io cts_n 94
-set_io rts_n 95
+set_io cts_n 56
+set_io rts_n 60
 
 set_io eth_phyrst 93
 

@@ -204,10 +204,12 @@ generate
 endgenerate
 assign boot = (ctr[CTR_BITS-1]);
 
+`ifndef VERILATOR
 SB_WARMBOOT warmboot (
 	.BOOT(boot),
 	.S0(1),
 	.S1(0)
 );
+`endif
 
 endmodule

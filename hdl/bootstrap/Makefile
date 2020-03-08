@@ -66,7 +66,7 @@ prog: $(PROJ).bin
 	iceprog $<
 
 clean:
-	rm -f $(PROJ).json $(PROJ).asc $(PROJ).rpt $(PROJ).bin yosys.log
+	rm -f $(PROJ).json $(PROJ).asc $(PROJ).rpt $(PROJ).bin yosys.log multi.bin
 
 # Icemulti makes us have the images we want to boot to ready
 # These files let us fake it

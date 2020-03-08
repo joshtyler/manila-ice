@@ -13,3 +13,6 @@
 [submodule "hdl/loopback_test/hdl_common"]
 	path = hdl/hdl_common
 	url = https://github.com/joshtyler/hdl_common.git
+[submodule "sw/spi_prog"]
+	path = sw/spi_prog
+	url = https://github.com/joshtyler/spi_prog.git

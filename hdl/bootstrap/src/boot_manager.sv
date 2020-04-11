@@ -101,68 +101,97 @@ generate
 		end
 endgenerate
 
+localparam [23:0] setup_data_write_one_byte =
+{
+	{8'b00000001}, // One byte
+	{8'b00000010}, // To data reg
+	{8'b00000001}  // Write
+};
+
+localparam [23:0] setup_data_write_two_bytes =
+{
+	{8'b00000010}, // Two bytes
+	{8'b00000010}, // To data reg
+	{8'b00000001}  // Write, constant address
+};
+
+localparam [23:0] setup_config_write_one_byte =
+{
+	{8'b00000001}, // One byte
+	{8'b00000001}, // To config reg
+	{8'b00000001}  // Write
+};
+
+localparam [31:0] ss_high_keep_data =
+{
+	{8'b00000001}, // SS high don't discard data
+	setup_config_write_one_byte
+};
+
+localparam [31:0] ss_low_discard_data =
+{
+	{8'b00000010}, // Discard data and SS low
+	setup_config_write_one_byte
+};
+
+localparam [23:0] waste_time =
+{
+	{8'b11111111}, // 255 bytes
+	{8'b00000001}, // From config reg
+	{8'b00000000}  // Read
+};
+
+localparam [95:0] enable_volatile_status_register_write =
+{
+	ss_high_keep_data,
+	{8'h50}, // Enable write to staus register (treat all bits as volatile)
+	setup_data_write_one_byte,
+	ss_low_discard_data
+};
+
 rom_to_axis
 #(
 	.AXIS_BYTES(1),
-	.DEPTH(40),
+	.DEPTH(96),
 	.MEM({
-		{8'b00000001}, // SS high don't discard data
-		{8'b00000001}, // One byte
-		{8'b00000001}, // To config reg
-		{8'b00000001}, // Write
+		ss_high_keep_data,
+		{8'h03}, // dont invert memory proection range, don't lock security registers, enable QSPI, *prevent changes to stastus registers until power cycle*
+		{8'h31}, // Write status register 2
+		setup_data_write_two_bytes,
+		ss_low_discard_data,
 
-		{8'h24}, // Data
+		enable_volatile_status_register_write,
+
+		ss_high_keep_data,
+		{8'h60}, // driver strength=11,use CMP, SEC, TB, BP to protect memory
+		{8'h11}, // Write status register 3
+		setup_data_write_two_bytes,
+		ss_low_discard_data,
+
+		enable_volatile_status_register_write,
+
+		ss_high_keep_data,
+		{8'h24}, // Ignore WP pin, protect 64kB blocks. Protect bottom of memory. BP=001
 		{8'h01}, // Write status register 1
-		{8'b00000010}, // Two bytes
-		{8'b00000010}, // To data reg
-		{8'b00000001}, // Write
+		setup_data_write_two_bytes,
+		ss_low_discard_data,
 
-		{8'b00000010}, // Discard data and SS low
-		{8'b00000001}, // One byte
-		{8'b00000001}, // To config reg
-		{8'b00000001}, // Write
-
-
-
-		{8'b00000001}, // SS high don't discard data
-		{8'b00000001}, // One byte
-		{8'b00000001}, // To config reg
-		{8'b00000001}, // Write
-
-		{8'h50}, // Volatile bits Write enable
-		{8'b00000001}, // One byte
-		{8'b00000010}, // To data reg
-		{8'b00000001}, // Write
-
-		{8'b00000010}, // Discard data and SS low
-		{8'b00000001}, // One byte
-		{8'b00000001}, // To config reg
-		{8'b00000001}, // Write
-
+		enable_volatile_status_register_write,
 
 
 		// Waste time to get us out of sleep
-		{8'b11111111}, // 255 bytes
-		{8'b00000001}, // From config reg
-		{8'b00000000}, // Read
+		// The chip can take 3us to wake up
+		// At 1 read per clock cycle, these three reads will waste :
+		// 3*255*1/f
+		// This is enough for even a 250MHz clock - far beyond what the iCE40 can do!
+		waste_time,
+		waste_time,
+		waste_time,
 
-		{8'b00000001}, // SS high don't discard data
-		{8'b00000001}, // One byte
-		{8'b00000001}, // To config reg
-		{8'b00000001}, // Write
-
-
-
-
+		ss_high_keep_data,
 		{8'hAB}, // Release from power down
-		{8'b00000001}, // One byte
-		{8'b00000010}, // To data reg
-		{8'b00000001}, // Write
-
-		{8'b00000010}, // Discard data and SS low
-		{8'b00000001}, // One byte
-		{8'b00000001}, // To config reg
-		{8'b00000001} // Write
+		setup_data_write_one_byte,
+		ss_low_discard_data
 		})
 ) rom_to_axis_inst (
 	.clk(clk),

@@ -76,10 +76,12 @@ clean:
 foo bar baz :
 	dd if=/dev/zero of=$@ bs=1 count=1
 
-# 16 address bits aligns us with spi flash pages
+# 17 address bits is 128kB alignment
+# With our image size, this means that each image will take up 256kB
+# This aligns nicely with the protection size available on the Flash IC
 # The head command strips out our dummy images
 multi.bin: $(PROJ).bin foo bar baz
-	icemulti -a 16 $(PROJ).bin foo bar baz | head -c 192K > multi.bin
+	icemulti -a 17 $(PROJ).bin foo bar baz | head -c 256K > multi.bin
 
 .SECONDARY:
 .PHONY: all clean prog time

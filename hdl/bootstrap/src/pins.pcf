@@ -1,4 +1,4 @@
-# HX8k Dev board constraints
+# manila iCE constraints
 
 set_io leds[0] 110
 set_io leds[1] 112
@@ -23,5 +23,14 @@ set_io mosi 67
 set_io miso 68
 set_io sck  70
 set_io ss  71
-set_io hold_n  61
-set_io wp_n   62
+set_io wp_n   61
+set_io hold_n  62
+
+set_io pmod1[0] 136
+set_io pmod1[1] 137
+set_io pmod1[2] 138
+set_io pmod1[3] 139
+set_io pmod1[4] 141
+set_io pmod1[5] 142
+set_io pmod1[6] 143
+set_io pmod1[7] 144

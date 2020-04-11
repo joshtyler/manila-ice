@@ -15,12 +15,11 @@ module top
 	output logic ss,
 	input logic miso,
 	output logic mosi,
-	output logic hold_n,
-	output logic wp_n
-);
 
-assign hold_n = 1;
-assign wp_n = 1;
+	input logic wp_n, // Not used for write proect. Used to enable/disable protection
+
+	output logic [7:0] pmod1
+);
 
 /* verilator lint_off REALCVT */
 localparam integer CLK_FREQ = 50e6; // Can't use int'(50e6) because yosys doesn't support
@@ -29,7 +28,9 @@ localparam integer UART_BAUD_RATE = 460800;
 
 // Generate a power on reset
 logic sresetn;
-reset_gen #(.POLARITY(0)) reset_gen (.clk(clk), .en(1), .sreset(sresetn));
+
+// Nice long reset to ensure the SPI pins are available for us to use
+reset_gen #(.POLARITY(0), .COUNT(32767)) reset_gen (.clk(clk), .en(1), .sreset(sresetn));
 
 logic clk;
 assign clk = clk_raw;
@@ -55,7 +56,6 @@ uart_rx
 
 logic uart_rx_tready;
 logic uart_rx_tvalid;
-logic uart_rx_tlast;
 logic [7:0] uart_rx_tdata;
 
 logic uart_tx_tready;
@@ -81,9 +81,24 @@ axis_fifo
 	// Output
 	.axis_o_tready(uart_rx_tready),
 	.axis_o_tvalid(uart_rx_tvalid),
-	.axis_o_tlast(uart_rx_tlast),
+	.axis_o_tlast(),
 	.axis_o_tdata(uart_rx_tdata)
 );
+
+// Mux between the boot_manager axis_protect, and the data from the user
+logic axis_protect_tready;
+logic axis_protect_tvalid;
+logic [7:0]  axis_protect_tdata;
+logic axis_protect_done;
+
+logic axis_wb_in_tready;
+logic axis_wb_in_tvalid;
+logic [7:0]  axis_wb_in_tdata;
+
+assign axis_wb_in_tvalid   = axis_protect_done? uart_rx_tvalid    : axis_protect_tvalid;
+assign axis_wb_in_tdata    = axis_protect_done? uart_rx_tdata     : axis_protect_tdata ;
+assign uart_rx_tready      = axis_protect_done? axis_wb_in_tready : 0                  ;
+assign axis_protect_tready = axis_protect_done? 0                 : axis_wb_in_tready  ;
 
 localparam ADDR_BITS = 8;
 localparam BYTES = 1;
@@ -107,10 +122,10 @@ serial_wb_master
 	.clk(clk),
 	.sresetn(sresetn),
 
-	.axis_i_tready(uart_rx_tready),
-	.axis_i_tvalid(uart_rx_tvalid),
-	.axis_i_tlast(uart_rx_tlast),
-	.axis_i_tdata(uart_rx_tdata),
+	.axis_i_tready(axis_wb_in_tready),
+	.axis_i_tvalid(axis_wb_in_tvalid),
+	.axis_i_tlast(0),
+	.axis_i_tdata(axis_wb_in_tdata),
 
 	// Output
 	.axis_o_tready(uart_tx_tready),
@@ -167,49 +182,72 @@ uart_tx
 	.serial_data(uart_tx),
 
 	.s_axis_tready(uart_tx_tready),
-	.s_axis_tvalid(uart_tx_tvalid),
+	.s_axis_tvalid(uart_tx_tvalid && axis_protect_done), // Discard the data resulting from our memory protection
 	.s_axis_tdata(uart_tx_tdata)
 );
 
 
-// Automatically boot into next image
-localparam CTR_BITS = 28;
-logic [CTR_BITS-1:0] ctr;
-logic boot;
+// Enable the internal pullup on the wp_n pin by manually instantiating the IO
+logic enable_protection;
+`ifdef VERILATOR
+assign enable_protection = wp_n;
+`else
+SB_IO
+#(
+	.PIN_TYPE(6'b0000_01), // Simple input pin, no output capability
+	.PULLUP(1), // Enable pullup. Only available on banks 0,1,and 2
+	//.NEG_TRIGGER(0), // Unused
+	//.IO_STANDARD("SB_LVCMOS")
+) protect_io_inst (
+	.PACKAGE_PIN(wp_n),
+	//.LATCH_INPUT_VALUE(0), // Not Used
+	//.CLOCK_ENABLE(0), // No clock
+	//.INPUT_CLK(0), // No clock
+	//.OUTPUT_CLK(0), // No clock
+	//.OUTPUT_ENABLE(0), // Input only
+	//.D_OUT_0(0), // Input only
+	//.D_OUT_1(0), // Input only
+	.D_IN_0(enable_protection),
+	//.D_IN_1()
+);
+`endif
 
-logic disable_boot;
+logic reboot;
+boot_manager boot_manager_inst (
+		.clk(clk),
+		.sresetn(sresetn),
 
-always @(posedge clk)
-	if(!sresetn) begin
-		disable_boot <= 0;
-		ctr <= 0;
-	end else begin
-		if(!disable_boot) begin
-			ctr <= ctr + 1;
-		end
+		.uart_rx_valid(parallel_data_valid),
 
-		if(parallel_data_valid) begin
-			disable_boot <= 1;
-		end
-	end
+		.enable_protection(enable_protection),
 
-genvar i;
-generate
-	for(i=0; i<8;i++)
-		always @(posedge clk)
-			if(ctr == 0)
-				leds[i] <= 0;
-			else if(ctr > ((2**(CTR_BITS-1))/8)*i)
-				leds[i] <= 1;
-endgenerate
-assign boot = (ctr[CTR_BITS-1]);
+		.reboot(reboot),
+
+		.leds(leds),
+
+		.m_axis_protect_tready(axis_protect_tready),
+		.m_axis_protect_tvalid(axis_protect_tvalid),
+		.m_axis_protect_tdata(axis_protect_tdata),
+		.axis_protect_done(axis_protect_done)
+);
 
 `ifndef VERILATOR
 SB_WARMBOOT warmboot (
-	.BOOT(boot),
+	.BOOT(reboot),
 	.S0(1),
 	.S1(0)
 );
 `endif
+
+assign pmod1[0] = axis_protect_tvalid;
+assign pmod1[2] = axis_protect_done;
+assign pmod1[4] = axis_protect_tdata[0];
+assign pmod1[6] = axis_protect_tdata[1];
+assign pmod1[7] = sresetn;
+
+assign pmod1[1] = 0;
+assign pmod1[3] = 0;
+assign pmod1[5] = 0;
+
 
 endmodule

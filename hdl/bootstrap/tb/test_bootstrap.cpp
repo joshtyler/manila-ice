@@ -60,6 +60,8 @@ int main(int argc, char** argv)
 	ClockBind clkDriver(clk,uut.uut->clk_raw);
 	uut.addClock(&clkDriver);
 
+	uut.uut->wp_n = 1; // Enable protection
+
 	while(true)
 	{
 		if(uut.eval() == false)

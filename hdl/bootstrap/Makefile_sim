@@ -3,12 +3,14 @@ VERILATOR_FLAGS = --trace --cc --exe --l2-name v -CFLAGS '-Wall -Wextra -g -I../
 
 VERILOG_TOP = top
 VERILOG_SOURCES = src/top.sv \
+src/boot_manager.sv \
 tb/pll_model.sv \
 ../hdl_common/synth/other/reset_gen.sv \
 ../hdl_common/synth/other/fifo.sv \
 ../hdl_common/synth/axis/axis_fifo.sv \
 ../hdl_common/synth/axis/axis_register.sv \
 ../hdl_common/synth/axis/axis_spi_bridge.sv \
+../hdl_common/synth/axis/rom_to_axis.sv \
 ../hdl_common/synth/other/uart_rx.sv \
 ../hdl_common/synth/other/uart_tx.sv \
 ../hdl_common/synth/other/logic_cross_clock.sv \

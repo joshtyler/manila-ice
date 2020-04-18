@@ -2,8 +2,8 @@
 CC=g++
 # N.B. stealing source from SPI prog
 CXXFLAGS=-c -Wall  -g -I../spi_prog
-LDFLAGS=-lserial
-SOURCES= sdram_test.cpp
+LDFLAGS=-lserial -lpthread
+SOURCES= sdram_test.cpp ../spi_prog/VectorUtility.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=sdram_test
 

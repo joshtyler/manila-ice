@@ -24,7 +24,6 @@ COMMON_SYNTH_DIR = ../hdl_common/synth
 
 # Input files
 SRC_FILES += $(SRC_DIR)/top.sv
-SRC_FILES += $(SRC_DIR)/wbsdram.v
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/reset_gen.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/fifo.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/axis/axis_fifo.sv
@@ -33,6 +32,8 @@ SRC_FILES += $(COMMON_SYNTH_DIR)/other/uart_rx.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/uart_tx.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/logic_cross_clock.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/serial_wb_master.sv
+SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/wb_sdram.sv
+SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/wb_sdram_controller.sv
 
 PCF_FILE = $(SRC_DIR)/pins.pcf
 

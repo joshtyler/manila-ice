@@ -134,32 +134,29 @@ serial_wb_master
 // Also naturally a wider address bus
 logic        sdram_drive_data;
 logic [15:0] sdram_data_out;
-wbsdram sdram_inst (
-	.i_clk(clk),
+wb_sdram sdram_inst (
+	.clk(clk),
+	.sresetn(sresetn),
 
-	.i_wb_cyc   (wb_cyc),
-	.i_wb_stb   (wb_stb),
-	.i_wb_we    (wb_we),
-	.i_wb_addr  (wb_addr), // Limiting address range
-	.i_wb_data  (wb_dat_m2s), // Discarding data
-	.i_wb_sel   ('1),
-	.o_wb_ack   (wb_ack),
-	.o_wb_stall (wb_stall),
-	.o_wb_data  (wb_dat_s2m), // Discarding data
+	.s_wb_stb   (wb_stb),
+	.s_wb_we    (wb_we),
+	.s_wb_addr  (wb_addr), // Limiting address range
+	.s_wb_dat_m2s  (wb_dat_m2s), // Discarding data
+	.s_wb_ack   (wb_ack),
+	.s_wb_stall (wb_stall),
+	.s_wb_dat_s2m (wb_dat_s2m), // Discarding data
 
-	.o_ram_cke   (sdram_cke),
-	.o_ram_cs_n  (sdram_cs_n),
-	.o_ram_ras_n (sdram_ras_n),
-	.o_ram_cas_n (sdram_cas_n),
-	.o_ram_we_n  (sdram_we_n),
-	.o_ram_bs    (sdram_bs),
-	.o_ram_addr  (sdram_addr),
-	.o_ram_dmod  (sdram_drive_data),
-	.i_ram_data  (sdram_data),
-	.o_ram_data  (sdram_data_out),
-	.o_ram_dqm   (sdram_dqm),
-
-	.o_debug ()
+	.ram_cke   (sdram_cke),
+	.ram_cs_n  (sdram_cs_n),
+	.ram_ras_n (sdram_ras_n),
+	.ram_cas_n (sdram_cas_n),
+	.ram_we_n  (sdram_we_n),
+	.ram_bs    (sdram_bs),
+	.ram_a     (sdram_addr),
+	.ram_dq_oe (sdram_drive_data),
+	.ram_dq_i  (sdram_data),
+	.ram_dq_o  (sdram_data_out),
+	.ram_dqm   (sdram_dqm)
 );
 assign sdram_data = sdram_drive_data ? sdram_data_out : 'z;
 assign sdram_clk = clk;

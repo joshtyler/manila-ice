@@ -28,6 +28,7 @@ SRC_FILES += $(COMMON_SYNTH_DIR)/other/reset_gen.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/fifo.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/axis/axis_fifo.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/axis/axis_register.sv
+SRC_FILES += $(COMMON_SYNTH_DIR)/axis/axis_width_converter.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/uart_rx.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/uart_tx.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/logic_cross_clock.sv

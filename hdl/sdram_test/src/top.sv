@@ -18,8 +18,7 @@ module top
 	output logic [1:0]  sdram_bs,
 	output logic [11:0] sdram_addr,
 	inout  logic [15:0] sdram_data,
-	output logic [1:0]  sdram_dqm,
-
+	output logic [1:0]  sdram_dqm
 );
 
 
@@ -85,14 +84,13 @@ axis_fifo
 	.axis_o_tdata(uart_rx_tdata)
 );
 
-localparam ADDR_BITS = 8;
-localparam BYTES = 1;
+localparam WB_ADDR_BITS = 23;
+localparam WB_BYTES = 2;
 localparam SEL_WIDTH = 1;
-logic [ADDR_BITS-1:0] wb_addr   ;
-logic [BYTES*8-1:0]   wb_dat_m2s;
-logic [BYTES*8-1:0]   wb_dat_s2m;
+logic [WB_ADDR_BITS-1:0] wb_addr   ;
+logic [WB_BYTES*8-1:0]   wb_dat_m2s;
+logic [WB_BYTES*8-1:0]   wb_dat_s2m;
 logic                 wb_we     ;
-logic [SEL_WIDTH-1:0] wb_sel    ;
 logic                 wb_stb    ;
 logic                 wb_cyc    ;
 logic                 wb_ack    ;
@@ -101,8 +99,8 @@ logic                 wb_stall  ;
 
 serial_wb_master
 #(
-	.BYTES(1),
-	.ADDR_BITS(8)
+	.BYTES(WB_BYTES),
+	.ADDR_BITS(WB_ADDR_BITS)
 ) serial_wb_master_inst (
 	.clk(clk),
 	.sresetn(sresetn),
@@ -122,7 +120,7 @@ serial_wb_master
 	.m_wb_dat_m2s(wb_dat_m2s),
 	.m_wb_dat_s2m(wb_dat_s2m),
 	.m_wb_we     (wb_we     ),
-	.m_wb_sel    (wb_sel    ),
+	.m_wb_sel    (),
 	.m_wb_stb    (wb_stb    ),
 	.m_wb_cyc    (wb_cyc    ),
 	.m_wb_ack    (wb_ack    ),
@@ -140,11 +138,11 @@ wb_sdram sdram_inst (
 
 	.s_wb_stb   (wb_stb),
 	.s_wb_we    (wb_we),
-	.s_wb_addr  (wb_addr), // Limiting address range
-	.s_wb_dat_m2s  (wb_dat_m2s), // Discarding data
+	.s_wb_addr  (wb_addr),
+	.s_wb_dat_m2s  (wb_dat_m2s),
 	.s_wb_ack   (wb_ack),
 	.s_wb_stall (wb_stall),
-	.s_wb_dat_s2m (wb_dat_s2m), // Discarding data
+	.s_wb_dat_s2m (wb_dat_s2m),
 
 	.ram_cke   (sdram_cke),
 	.ram_cs_n  (sdram_cs_n),
@@ -162,10 +160,12 @@ assign sdram_data = sdram_drive_data ? sdram_data_out : 'z;
 assign sdram_clk = clk;
 always_ff @ (posedge clk)
 begin
-	if(uart_rx_tvalid)
-		leds <= uart_rx_tdata;
+	if(uart_tx_tvalid)
+	begin
+		leds <= uart_tx_tdata;
+		//leds[7] <= 1;
+	end
 end
-
 
 uart_tx
 #(

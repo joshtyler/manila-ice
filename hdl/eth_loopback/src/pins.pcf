@@ -1,0 +1,33 @@
+set_io eth_rxclk 79
+set_io eth_rxd[0] 74
+set_io eth_rxd[1] 75
+set_io eth_rxd[2] 76
+set_io eth_rxd[3] 78
+set_io eth_rxd[4] 80
+set_io eth_rxd[5] 81
+set_io eth_rxd[6] 82
+set_io eth_rxd[7] 83
+set_io eth_rxdv 73
+
+set_io eth_gtxclk 88
+set_io eth_txd[0] 91
+set_io eth_txd[1] 94
+set_io eth_txd[2] 95
+set_io eth_txd[3] 96
+set_io eth_txd[4] 98
+set_io eth_txd[5] 99
+set_io eth_txd[6] 101
+set_io eth_txd[7] 102
+set_io eth_txen 90
+set_io eth_txer 104
+
+set_io eth_phyrst_n 93
+
+set_io leds[0] 110
+set_io leds[1] 112
+set_io leds[2] 113
+set_io leds[3] 114
+set_io leds[4] 115
+set_io leds[5] 116
+set_io leds[6] 117
+set_io leds[7] 118

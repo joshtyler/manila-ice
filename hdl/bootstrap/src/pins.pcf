@@ -34,3 +34,6 @@ set_io pmod1[4] 141
 set_io pmod1[5] 142
 set_io pmod1[6] 143
 set_io pmod1[7] 144
+
+set_io buttons[0] 63
+set_io buttons[1] 64

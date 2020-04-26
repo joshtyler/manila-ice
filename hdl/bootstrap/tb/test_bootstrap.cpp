@@ -61,6 +61,7 @@ int main(int argc, char** argv)
 	uut.addClock(&clkDriver);
 
 	uut.uut->wp_n = 1; // Enable protection
+	uut.uut->buttons = 3; // Both high, normal state
 
 	while(true)
 	{

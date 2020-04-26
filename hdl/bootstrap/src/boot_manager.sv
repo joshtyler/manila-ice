@@ -9,8 +9,11 @@ module boot_manager
 	// Sampled from externally, pulled high, then the user ties low if they want a firmware update
 	input  logic enable_protection,
 
-	// Goes high if we should boot the next image
-	output logic reboot,
+	// Buttons to manually control boot image
+	// The event pulses high if the button changes
+	// This lets us know an event occurred
+	input logic [1:0] buttons,
+	input logic [1:0] button_events,
 
 	// Display status of the autoboot process
 	output logic [7:0] leds,
@@ -20,83 +23,148 @@ module boot_manager
 	output logic m_axis_protect_tvalid,
 	output logic [7:0]  m_axis_protect_tdata,
 	// This tells the main logic when to start listening to the UART rather than this state machine
-	output logic axis_protect_done
+	output logic axis_protect_done,
+
+	// Wishbone port to reboot by serial
+	input logic [7:0] s_wb_m2s,
+	output logic [7:0] s_wb_s2m,
+	input logic  s_wb_we,
+	input logic  s_wb_stb,
+	output logic  s_wb_ack,
+	output logic s_wb_stall
 );
+
+logic reboot = 0; // Bitstream initialise to zero to make sure we don't immediately reboot
+logic [1:0] boot_partition;
 
 localparam CTR_BITS = 28;
 logic [CTR_BITS-1:0] ctr;
 
-logic halt_ctr;
-logic normal_mode;
-
 logic m_axis_protect_tlast;
+
+logic [1:0] state;
+localparam [1:0] SM_PROTECT          = 2'b00;
+localparam [1:0] SM_FIRMWARE_UPGRADE = 2'b01;
+localparam [1:0] SM_WAIT_AUTOBOOT    = 2'b10;
+localparam [1:0] SM_MANUAL_CONTROL   = 2'b11;
+
+
+assign axis_protect_done = state != SM_PROTECT;
+
+logic [7:0] linear_leds;
 
 always @(posedge clk)
 begin
 	if(!sresetn) begin
-		halt_ctr <= 0;
 		ctr <= 0;
 		reboot <= 0;
-		normal_mode <= enable_protection;
-		axis_protect_done <= 0;
+		boot_partition <= 2'b01;
+		state <= enable_protection? SM_PROTECT : SM_FIRMWARE_UPGRADE;
+		leds <= '0;
 	end else begin
 
-		if(!halt_ctr) begin
-			ctr <= ctr + 1;
-		end
+		ctr <= ctr + 1;
+		s_wb_ack <= 0;
 
-		if(normal_mode) begin
-			// This is the "normal" mode
-			// Protect the memory
-			// Halt the automatic reboot process if we receive any serial data
-
-			// If we ever receive any serial data, halt the counterr
-			if(uart_rx_valid) begin
-				halt_ctr <= 1;
+		case(state)
+			SM_PROTECT:
+			begin
+				// Wait until we have protected the memory
+				if(m_axis_protect_tready && m_axis_protect_tvalid && m_axis_protect_tlast)
+				begin
+					state <= SM_WAIT_AUTOBOOT;
+				end
 			end
 
-			// If the counter gets high enough, boot into the other image
-			if(ctr[CTR_BITS-1]) begin
-				reboot <= 1;
+			SM_FIRMWARE_UPGRADE:
+			begin
+				// This is the firmware upgrade mode
+				// DONT protect the memory
+				// Don't ever auto reboot
+
+				// Flash the LEDs to show the user that they are not in the normal mode
+				leds <= {8{ctr[CTR_BITS-3]}};
 			end
 
-			if(m_axis_protect_tready && m_axis_protect_tvalid && m_axis_protect_tlast) begin
-				axis_protect_done <= 1;
+			SM_WAIT_AUTOBOOT:
+			begin
+				// This is the "normal" mode
+				// Memory is protected
+				// Wait until a timeout has passed and boot into the default partition
+
+				// If the counter gets high enough, boot into the other image
+				if(ctr[CTR_BITS-1]) begin
+					reboot <= 1;
+				end
+
+				// Show timer progress on LEDS
+				leds <= linear_leds;
+
+				// If we ever receive any serial data, halt the counter and go to manual control
+				// Or if the user pressed a button
+				if(uart_rx_valid || (| button_events))
+				begin
+					state <= SM_MANUAL_CONTROL;
+				end
 			end
 
-		end else begin
-			// This is the firmware upgrade mode
-			// DONT proctect the memory
-			// Don't ever auto reboot
-			axis_protect_done <= 1;
+			SM_MANUAL_CONTROL:
+			begin
+				// Here we use the buttons to decide whether to reboot or not
+				// button 0 cycles through the images
+				// button 1 commits to booting an image
+				// N.B. the buttons are active low (pressed = 0)
+				// We also listen to register reads/writes which will reboot us immediately
 
-			// Flash the LEDs to show the user that they are not in the normal mode
+				// Show the boot partition on the LEDs
+				// Very lazy binary to one hot
+				case(boot_partition)
+					2'b00: leds <= 8'b00000001;
+					2'b01: leds <= 8'b00000010;
+					2'b10: leds <= 8'b00000100;
+					2'b11: leds <= 8'b00001000;
+				endcase
 
-		end
+				if(button_events[0] && buttons[0])
+				begin
+					boot_partition <= boot_partition + 1;
+				end
+
+				if(button_events[1] && buttons[1])
+				begin
+					reboot <= 1;
+				end
+
+				// Reboot if the user writes to the register
+				if(s_wb_stb)
+				begin
+					if(s_wb_we)
+					begin
+						boot_partition <= s_wb_m2s[1:0];
+						reboot <= 1;
+					end
+					s_wb_ack <= 1;
+				end
+
+			end
+
+		endcase
 	end
 end
 
+assign s_wb_stall = state != SM_MANUAL_CONTROL;
+assign s_wb_s2m = {6'b000000, boot_partition};
 
-// Assign the LEDS.
 // In normal mode, assign the counter to the LEDs in a linear fashion
 // This indicates reboot status to the user
-// In unprotected mode flash the LEDs to warn the user
-// Doesn't need to be clocked, but it can only help timing
 genvar i;
 generate
 	for(i=0; i<8;i++)
-		always @(posedge clk)
+		always_comb
 		begin
-			if(normal_mode)
-			begin
-				if(ctr == 0)
-				begin
-					leds[i] <= 0;
-				end else if(ctr > ((2**(CTR_BITS-1))/8)*i) begin
-					leds[i] <= 1;
-				end
-			end else begin
-				leds[i] <= ctr[CTR_BITS-3];
+			linear_leds[i] = 0;
+			if(ctr > ((2**(CTR_BITS-1))/8)*i) begin
+				linear_leds[i] = 1;
 			end
 		end
 endgenerate
@@ -136,7 +204,7 @@ localparam [31:0] ss_low_discard_data =
 
 localparam [23:0] waste_time =
 {
-	{8'b11111111}, // 255 bytes
+	{8'b11111111}, // 1 byte
 	{8'b00000001}, // From config reg
 	{8'b00000000}  // Read
 };
@@ -195,13 +263,21 @@ rom_to_axis
 		})
 ) rom_to_axis_inst (
 	.clk(clk),
-	.sresetn(sresetn && normal_mode),
+	.sresetn(sresetn && (state == SM_PROTECT)),
 
 	.axis_tready(m_axis_protect_tready),
 	.axis_tvalid(m_axis_protect_tvalid),
 	.axis_tlast(m_axis_protect_tlast),
 	.axis_tdata(m_axis_protect_tdata)
 );
+
+`ifndef VERILATOR
+SB_WARMBOOT warmboot (
+	.BOOT(reboot),
+	.S0(boot_partition[0]),
+	.S1(boot_partition[1])
+);
+`endif
 
 
 endmodule

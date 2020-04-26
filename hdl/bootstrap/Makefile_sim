@@ -11,9 +11,11 @@ tb/pll_model.sv \
 ../hdl_common/synth/axis/axis_register.sv \
 ../hdl_common/synth/axis/axis_spi_bridge.sv \
 ../hdl_common/synth/axis/rom_to_axis.sv \
+../hdl_common/synth/axis/axis_width_converter.sv \
 ../hdl_common/synth/other/uart_rx.sv \
 ../hdl_common/synth/other/uart_tx.sv \
 ../hdl_common/synth/other/logic_cross_clock.sv \
+../hdl_common/synth/other/debouncer.sv \
 ../hdl_common/synth/wishbone/wishbone.sv \
 ../hdl_common/synth/wishbone/serial_wb_master.sv \
 ../hdl_common/synth/wishbone/simple_wb_slave.sv \

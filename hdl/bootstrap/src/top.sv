@@ -6,20 +6,22 @@ module top
 
 	input  logic uart_rx,
 	output logic uart_tx,
-	input  logic rts_n,
-	output logic cts_n,
 
 	output logic [7:0] leds,
+	input logic [1:0] buttons,
 
 	output logic sck,
 	output logic ss,
 	input logic miso,
 	output logic mosi,
 
-	input logic wp_n, // Not used for write proect. Used to enable/disable protection
-
-	output logic [7:0] pmod1
+	input logic wp_n // Not used for write proect. Used to enable/disable protection
 );
+
+// The flow control is broken in the linux kernel, so hard disable for now
+logic rts_n;
+assign rts_n = 0;
+logic cts_n;
 
 /* verilator lint_off REALCVT */
 localparam integer CLK_FREQ = 50e6; // Can't use int'(50e6) because yosys doesn't support
@@ -77,12 +79,14 @@ axis_fifo
 	.axis_i_tvalid(parallel_data_valid),
 	.axis_i_tlast(1),
 	.axis_i_tdata(parallel_data),
+	.axis_i_tuser(1'b0),
 
 	// Output
 	.axis_o_tready(uart_rx_tready),
 	.axis_o_tvalid(uart_rx_tvalid),
 	.axis_o_tlast(),
-	.axis_o_tdata(uart_rx_tdata)
+	.axis_o_tdata(uart_rx_tdata),
+	.axis_o_tuser()
 );
 
 // Mux between the boot_manager axis_protect, and the data from the user
@@ -144,9 +148,31 @@ serial_wb_master
 	.m_wb_stall  (wb_stall  )
 );
 
-wb_to_spi_master spi_inst (
-	.clk(clk),
-	.sresetn(sresetn),
+logic [ADDR_BITS-1:0] wb_boot_manager_addr    , wb_spi_addr;
+logic [BYTES*8-1:0]   wb_boot_manager_dat_m2s , wb_spi_dat_m2s;
+logic [BYTES*8-1:0]   wb_boot_manager_dat_s2m , wb_spi_dat_s2m;
+logic                 wb_boot_manager_we      , wb_spi_we     ;
+logic                 wb_boot_manager_stb     , wb_spi_stb    ;
+logic [SEL_WIDTH-1:0] wb_boot_manager_sel     , wb_spi_sel    ;
+logic                 wb_boot_manager_cyc     , wb_spi_cyc    ;
+logic                 wb_boot_manager_ack     , wb_spi_ack    ;
+logic                 wb_boot_manager_stall   , wb_spi_stall  ;
+
+wb_interconnect
+#(
+	.NUM_MASTERS(2),
+	.ADDR_BITS(ADDR_BITS),
+	.BYTES(BYTES),
+	.SEL_WIDTH(SEL_WIDTH),
+	.MASTER_ADDRESSES({
+		{(ADDR_BITS-3){1'b0}},3'b100,
+		{(ADDR_BITS){1'b0}}
+	}),
+	.MASTER_ADDRESS_MASKS({
+		{(ADDR_BITS){1'b1}},
+		{(ADDR_BITS-2){1'b1}},2'b00
+	})
+) ic (
 	.s_wb_addr   (wb_addr   ),
 	.s_wb_dat_m2s(wb_dat_m2s),
 	.s_wb_dat_s2m(wb_dat_s2m),
@@ -156,6 +182,31 @@ wb_to_spi_master spi_inst (
 	.s_wb_cyc    (wb_cyc    ),
 	.s_wb_ack    (wb_ack    ),
 	.s_wb_stall  (wb_stall  ),
+
+	.m_wb_addr   ({wb_boot_manager_addr    , wb_spi_addr   }),
+	.m_wb_dat_m2s({wb_boot_manager_dat_m2s , wb_spi_dat_m2s}),
+	.m_wb_dat_s2m({wb_boot_manager_dat_s2m , wb_spi_dat_s2m}),
+	.m_wb_we     ({wb_boot_manager_we      , wb_spi_we     }),
+	.m_wb_sel    ({wb_boot_manager_sel     , wb_spi_sel    }),
+	.m_wb_stb    ({wb_boot_manager_stb     , wb_spi_stb    }),
+	.m_wb_cyc    ({wb_boot_manager_cyc     , wb_spi_cyc    }),
+	.m_wb_ack    ({wb_boot_manager_ack     , wb_spi_ack    }),
+	.m_wb_stall  ({wb_boot_manager_stall   , wb_spi_stall  })
+);
+
+
+wb_to_spi_master spi_inst (
+	.clk(clk),
+	.sresetn(sresetn),
+	.s_wb_addr   (wb_spi_addr   ),
+	.s_wb_dat_m2s(wb_spi_dat_m2s),
+	.s_wb_dat_s2m(wb_spi_dat_s2m),
+	.s_wb_we     (wb_spi_we     ),
+	.s_wb_sel    (wb_spi_sel    ),
+	.s_wb_stb    (wb_spi_stb    ),
+	.s_wb_cyc    (wb_spi_cyc    ),
+	.s_wb_ack    (wb_spi_ack    ),
+	.s_wb_stall  (wb_spi_stall  ),
 	.sck(sck),
 	.ss(ss),
 	.miso(miso),
@@ -196,58 +247,60 @@ SB_IO
 #(
 	.PIN_TYPE(6'b0000_01), // Simple input pin, no output capability
 	.PULLUP(1), // Enable pullup. Only available on banks 0,1,and 2
-	//.NEG_TRIGGER(0), // Unused
-	//.IO_STANDARD("SB_LVCMOS")
 ) protect_io_inst (
 	.PACKAGE_PIN(wp_n),
-	//.LATCH_INPUT_VALUE(0), // Not Used
-	//.CLOCK_ENABLE(0), // No clock
-	//.INPUT_CLK(0), // No clock
-	//.OUTPUT_CLK(0), // No clock
-	//.OUTPUT_ENABLE(0), // Input only
-	//.D_OUT_0(0), // Input only
-	//.D_OUT_1(0), // Input only
 	.D_IN_0(enable_protection),
-	//.D_IN_1()
 );
 `endif
 
-logic reboot;
+// Debounce the buttons
+logic [1:0] buttons_debounced;
+logic [1:0] button_events;
+genvar i;
+generate
+	for(i=0; i<2;i++)
+	begin
+		logic o;
+		debouncer
+		#(
+			.CLK_RATE(CLK_FREQ),
+			.SETTLING_TIME_us(10_000)
+		) debouncer_inst (
+			.clk(clk),
+			.sresetn(sresetn),
+			.i(buttons[i]),
+			.o(o),
+			.change(button_events[i])
+		);
+		// Invert the buttons to make 1 = pressed
+		assign buttons_debounced[i] = !o;
+	end
+endgenerate
+
 boot_manager boot_manager_inst (
-		.clk(clk),
-		.sresetn(sresetn),
+	.clk(clk),
+	.sresetn(sresetn),
 
-		.uart_rx_valid(parallel_data_valid),
+	.uart_rx_valid(parallel_data_valid),
 
-		.enable_protection(enable_protection),
+	.enable_protection(enable_protection),
 
-		.reboot(reboot),
+	.buttons(buttons_debounced),
+	.button_events(button_events),
 
-		.leds(leds),
+	.leds(leds),
 
-		.m_axis_protect_tready(axis_protect_tready),
-		.m_axis_protect_tvalid(axis_protect_tvalid),
-		.m_axis_protect_tdata(axis_protect_tdata),
-		.axis_protect_done(axis_protect_done)
+	.m_axis_protect_tready(axis_protect_tready),
+	.m_axis_protect_tvalid(axis_protect_tvalid),
+	.m_axis_protect_tdata(axis_protect_tdata),
+	.axis_protect_done(axis_protect_done),
+
+	.s_wb_m2s  (wb_boot_manager_dat_m2s),
+	.s_wb_s2m  (wb_boot_manager_dat_s2m),
+	.s_wb_we   (wb_boot_manager_we),
+	.s_wb_stb  (wb_boot_manager_stb),
+	.s_wb_ack  (wb_boot_manager_ack),
+	.s_wb_stall(wb_boot_manager_stall)
 );
-
-`ifndef VERILATOR
-SB_WARMBOOT warmboot (
-	.BOOT(reboot),
-	.S0(1),
-	.S1(0)
-);
-`endif
-
-assign pmod1[0] = axis_protect_tvalid;
-assign pmod1[2] = axis_protect_done;
-assign pmod1[4] = axis_protect_tdata[0];
-assign pmod1[6] = axis_protect_tdata[1];
-assign pmod1[7] = sresetn;
-
-assign pmod1[1] = 0;
-assign pmod1[3] = 0;
-assign pmod1[5] = 0;
-
 
 endmodule

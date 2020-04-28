@@ -11,6 +11,7 @@ tb/pll_model.sv \
 ../hdl_common/synth/axis/axis_register.sv \
 ../hdl_common/synth/axis/axis_spi_bridge.sv \
 ../hdl_common/synth/axis/rom_to_axis.sv \
+../hdl_common/synth/axis/vector_to_axis.sv \
 ../hdl_common/synth/axis/axis_width_converter.sv \
 ../hdl_common/synth/other/uart_rx.sv \
 ../hdl_common/synth/other/uart_tx.sv \

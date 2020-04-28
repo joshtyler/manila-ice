@@ -95,9 +95,13 @@ logic axis_protect_tvalid;
 logic [7:0]  axis_protect_tdata;
 logic axis_protect_done;
 
-logic axis_wb_in_tready;
-logic axis_wb_in_tvalid;
+logic        axis_wb_in_tready;
+logic        axis_wb_in_tvalid;
 logic [7:0]  axis_wb_in_tdata;
+
+logic        axis_wb_out_tready;
+logic        axis_wb_out_tvalid;
+logic [7:0]  axis_wb_out_tdata;
 
 assign axis_wb_in_tvalid   = axis_protect_done? uart_rx_tvalid    : axis_protect_tvalid;
 assign axis_wb_in_tdata    = axis_protect_done? uart_rx_tdata     : axis_protect_tdata ;
@@ -132,10 +136,10 @@ serial_wb_master
 	.axis_i_tdata(axis_wb_in_tdata),
 
 	// Output
-	.axis_o_tready(uart_tx_tready),
-	.axis_o_tvalid(uart_tx_tvalid),
+	.axis_o_tready(axis_wb_out_tready),
+	.axis_o_tvalid(axis_wb_out_tvalid),
 	.axis_o_tlast(),
-	.axis_o_tdata(uart_tx_tdata),
+	.axis_o_tdata(axis_wb_out_tdata),
 
 	.m_wb_addr   (wb_addr   ),
 	.m_wb_dat_m2s(wb_dat_m2s),
@@ -213,13 +217,67 @@ wb_to_spi_master spi_inst (
 	.mosi(mosi)
 );
 
-/*
-always_ff @ (posedge clk)
-begin
-	if(uart_rx_tvalid)
-		leds <= uart_rx_tdata;
-end
-*/
+
+// Send out the version number over serial before we receive anything
+logic       m_axis_version_tready;
+logic       m_axis_version_tvalid;
+logic [7:0] m_axis_version_tdata;
+
+logic       axis_version_unspaced_tready;
+logic       axis_version_unspaced_tvalid;
+logic       axis_version_unspaced_tlast;
+logic [7:0] axis_version_unspaced_tdata;
+
+localparam MESSAGE_BYTES = 28;
+localparam [MESSAGE_BYTES*8-1 :0] message = "Manila iCE bootloader v1.0\r\n";
+
+vector_to_axis
+#(
+	.AXIS_BYTES(1),
+	.VEC_BYTES(MESSAGE_BYTES),
+	.MSB_FIRST(1)
+) version_axis_inst (
+	.clk(clk),
+	.sresetn(sresetn),
+
+	.vec(message),
+
+	.axis_tready(axis_version_unspaced_tready),
+	.axis_tvalid(axis_version_unspaced_tvalid),
+	.axis_tlast (axis_version_unspaced_tlast),
+	.axis_tdata (axis_version_unspaced_tdata)
+);
+
+localparam integer VERSION_SPACE_CYCLLES = 10.0e-3/(1.0/CLK_FREQ);
+axis_spacer
+#(
+	.AXIS_BYTES(1),
+	.GAP_CYCLES(VERSION_SPACE_CYCLLES)
+) version_spacer (
+	.clk(clk),
+	.sresetn(sresetn),
+
+	.axis_i_tready(axis_version_unspaced_tready),
+	.axis_i_tvalid(axis_version_unspaced_tvalid),
+	.axis_i_tlast (axis_version_unspaced_tlast),
+	.axis_i_tdata (axis_version_unspaced_tdata),
+
+	.axis_o_tready(m_axis_version_tready),
+	.axis_o_tvalid(m_axis_version_tvalid),
+	.axis_o_tlast (),
+	.axis_o_tdata (m_axis_version_tdata)
+);
+
+logic send_wb = 0;
+always_ff @(posedge clk)
+	if(parallel_data_valid)
+		send_wb <= 1;
+
+assign axis_wb_out_tready    = send_wb? uart_tx_tready                            : 1                    ; // We hold m_axis_version_tready so that the protect code works
+assign m_axis_version_tready = send_wb? 0                                         : uart_tx_tready       ;
+assign uart_tx_tvalid        = send_wb? (axis_wb_out_tvalid && axis_protect_done) : m_axis_version_tvalid;
+assign uart_tx_tdata         = send_wb? axis_wb_out_tdata                         : m_axis_version_tdata ;
+
 
 uart_tx
 #(
@@ -233,7 +291,7 @@ uart_tx
 	.serial_data(uart_tx),
 
 	.s_axis_tready(uart_tx_tready),
-	.s_axis_tvalid(uart_tx_tvalid && axis_protect_done), // Discard the data resulting from our memory protection
+	.s_axis_tvalid(uart_tx_tvalid), // Discard the data resulting from our memory protection
 	.s_axis_tdata(uart_tx_tdata)
 );
 

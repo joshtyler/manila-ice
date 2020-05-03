@@ -246,8 +246,8 @@ logic       axis_version_unspaced_tvalid;
 logic       axis_version_unspaced_tlast;
 logic [7:0] axis_version_unspaced_tdata;
 
-localparam MESSAGE_BYTES = 28;
-localparam [MESSAGE_BYTES*8-1 :0] message = "Manila iCE bootloader v1.0.0\r\n";
+localparam MESSAGE_BYTES = 29;
+localparam [MESSAGE_BYTES*8-1 :0] message = "Manila iCE bootloader v1.0.0\n";
 
 vector_to_axis
 #(

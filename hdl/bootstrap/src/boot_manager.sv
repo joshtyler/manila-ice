@@ -3,9 +3,9 @@ module boot_manager
 	input  logic clk,
 	input  logic sresetn,
 
-	// High if anything is received on the uart
+	// High once we have recevied the magic over the UART
 	// Means that we should stop the autoboot process
-	input  logic uart_rx_valid,
+	input  logic unlocked,
 	// Sampled from externally, pulled high, then the user ties low if they want a firmware update
 	input  logic enable_protection,
 
@@ -102,7 +102,7 @@ begin
 
 				// If we ever receive any serial data, halt the counter and go to manual control
 				// Or if the user pressed a button
-				if(uart_rx_valid || (| button_events))
+				if(unlocked || (| button_events))
 				begin
 					state <= SM_MANUAL_CONTROL;
 				end

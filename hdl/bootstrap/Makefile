@@ -27,6 +27,7 @@ SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/wishbone.sv
 SRC_FILES += $(SRC_DIR)/pll.sv
 SRC_FILES += $(SRC_DIR)/top.sv
 SRC_FILES += $(SRC_DIR)/boot_manager.sv
+SRC_FILES += $(SRC_DIR)/unlocker.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/reset_gen.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/other/fifo.sv
 SRC_FILES += $(COMMON_SYNTH_DIR)/axis/axis_fifo.sv

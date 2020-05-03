@@ -89,6 +89,24 @@ axis_fifo
 	.axis_o_tuser()
 );
 
+logic unlocked;
+localparam MAGIC_BYTES = 15;
+localparam [MAGIC_BYTES*8-1 :0] MAGIC = "#!manilamagic!#";
+
+unlocker
+#(
+	.MAGIC_BYTES(MAGIC_BYTES),
+	.MAGIC(MAGIC)
+) unlocker_inst (
+	.clk(clk),
+	.sresetn(sresetn),
+
+	.s_axis_tvalid(uart_rx_tvalid),
+	.s_axis_tdata (uart_rx_tdata),
+
+	.unlocked(unlocked)
+);
+
 // Mux between the boot_manager axis_protect, and the data from the user
 logic axis_protect_tready;
 logic axis_protect_tvalid;
@@ -103,10 +121,10 @@ logic        axis_wb_out_tready;
 logic        axis_wb_out_tvalid;
 logic [7:0]  axis_wb_out_tdata;
 
-assign axis_wb_in_tvalid   = axis_protect_done? uart_rx_tvalid    : axis_protect_tvalid;
-assign axis_wb_in_tdata    = axis_protect_done? uart_rx_tdata     : axis_protect_tdata ;
-assign uart_rx_tready      = axis_protect_done? axis_wb_in_tready : 0                  ;
-assign axis_protect_tready = axis_protect_done? 0                 : axis_wb_in_tready  ;
+assign axis_wb_in_tvalid   = axis_protect_done && unlocked? uart_rx_tvalid    : axis_protect_tvalid;
+assign axis_wb_in_tdata    = axis_protect_done && unlocked? uart_rx_tdata     : axis_protect_tdata ;
+assign uart_rx_tready      = axis_protect_done && unlocked? axis_wb_in_tready : (!unlocked)        ; // Make the data ready for the unlocker
+assign axis_protect_tready = axis_protect_done && unlocked? 0                 : axis_wb_in_tready  ;
 
 localparam ADDR_BITS = 8;
 localparam BYTES = 1;
@@ -229,7 +247,7 @@ logic       axis_version_unspaced_tlast;
 logic [7:0] axis_version_unspaced_tdata;
 
 localparam MESSAGE_BYTES = 28;
-localparam [MESSAGE_BYTES*8-1 :0] message = "Manila iCE bootloader v1.0\r\n";
+localparam [MESSAGE_BYTES*8-1 :0] message = "Manila iCE bootloader v1.0.0\r\n";
 
 vector_to_axis
 #(
@@ -248,11 +266,11 @@ vector_to_axis
 	.axis_tdata (axis_version_unspaced_tdata)
 );
 
-localparam integer VERSION_SPACE_CYCLLES = 10.0e-3/(1.0/CLK_FREQ);
+localparam integer VERSION_SPACE_CYCLES = 10.0e-3/(1.0/CLK_FREQ);
 axis_spacer
 #(
 	.AXIS_BYTES(1),
-	.GAP_CYCLES(VERSION_SPACE_CYCLLES)
+	.GAP_CYCLES(VERSION_SPACE_CYCLES)
 ) version_spacer (
 	.clk(clk),
 	.sresetn(sresetn),
@@ -268,15 +286,10 @@ axis_spacer
 	.axis_o_tdata (m_axis_version_tdata)
 );
 
-logic send_wb = 0;
-always_ff @(posedge clk)
-	if(parallel_data_valid)
-		send_wb <= 1;
-
-assign axis_wb_out_tready    = send_wb? uart_tx_tready                            : 1                    ; // We hold m_axis_version_tready so that the protect code works
-assign m_axis_version_tready = send_wb? 0                                         : uart_tx_tready       ;
-assign uart_tx_tvalid        = send_wb? (axis_wb_out_tvalid && axis_protect_done) : m_axis_version_tvalid;
-assign uart_tx_tdata         = send_wb? axis_wb_out_tdata                         : m_axis_version_tdata ;
+assign axis_wb_out_tready    = unlocked? uart_tx_tready                            : 1                    ; // We hold m_axis_version_tready so that the protect code works
+assign m_axis_version_tready = unlocked? 0                                         : uart_tx_tready       ;
+assign uart_tx_tvalid        = unlocked? (axis_wb_out_tvalid && axis_protect_done) : m_axis_version_tvalid;
+assign uart_tx_tdata         = unlocked? axis_wb_out_tdata                         : m_axis_version_tdata ;
 
 
 uart_tx
@@ -339,7 +352,7 @@ boot_manager boot_manager_inst (
 	.clk(clk),
 	.sresetn(sresetn),
 
-	.uart_rx_valid(parallel_data_valid),
+	.unlocked(unlocked),
 
 	.enable_protection(enable_protection),
 

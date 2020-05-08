@@ -90,7 +90,8 @@ case ${ACTION} in
 		${SCRIPT_PATH}/spi_prog -m wbuart --uartdev ${SERIAL} --baud 460800 --compaddr 0 -w -v -a ${ADDR} -i ${FILE}
 
 		echo "Rebooting to bootloader"
-		echo "01040000" | xxd -r -p > /dev/ttyUSB0
+		# This is a write to address 4, data 0x00
+		echo "01040000" | xxd -r -p > ${SERIAL}
 		;;
 	*)
 		printf "Unknown action: $1\n"

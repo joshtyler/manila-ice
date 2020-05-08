@@ -1,2 +1,4 @@
 flash_layout.log
 flash_layout.aux
+*.pdf
+*.synctex.gz

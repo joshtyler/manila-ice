@@ -50,7 +50,7 @@ SRC_FILES += $(COMMON_SYNTH_DIR)/wishbone/wb_interconnect.sv
 PCF_FILE = $(SRC_DIR)/pins.pcf
 
 .PHONY: all
-all: $(PROJ).rpt $(PROJ).bin multi.bin
+all: $(PROJ).rpt $(PROJ).bin
 
 %.json: $(SRC_FILES)
 	@echo "Begin synthesis"
@@ -73,20 +73,6 @@ prog: $(PROJ).bin
 	iceprog $<
 
 clean:
-	rm -f $(PROJ).json $(PROJ).asc $(PROJ).rpt $(PROJ).bin yosys.log multi.bin
+	rm -f $(PROJ).json $(PROJ).asc $(PROJ).rpt $(PROJ).bin yosys.log
 
-# Icemulti makes us have the images we want to boot to ready
-# These files let us fake it
-.INTERMEDIATE: foo bar baz
-foo bar baz :
-	dd if=/dev/zero of=$@ bs=1 count=1
-
-# 17 address bits is 128kB alignment
-# With our image size, this means that each image will take up 256kB
-# This aligns nicely with the protection size available on the Flash IC
-# The head command strips out our dummy images
-multi.bin: $(PROJ).bin foo bar baz
-	icemulti -a 17 $(PROJ).bin foo bar baz | head -c 256K > multi.bin
-
-.SECONDARY:
 .PHONY: all clean prog time

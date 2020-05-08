@@ -1,0 +1,38 @@
+\documentclass{standalone}
+
+
+\usepackage{bytefield}
+
+% Memory layout taken from https://www.martin-demling.de/2011/06/memory-maps-in-latex-using-the-bytefield-package/
+\newcommand{\memsection}[4]{
+	\bytefieldsetup{bitheight=#3\baselineskip}    % define the height of the memsection
+	\bitbox[]{10}{
+		\texttt{#1}     % print end address
+		\\ \vspace{#3\baselineskip} \vspace{-2\baselineskip} \vspace{-#3pt} % do some spacing
+		\texttt{#2} % print start address
+	}
+	\bitbox{16}{#4} % print box with caption
+}
+
+\begin{document}
+\begin{bytefield}{24}
+	\memsection{ffffff}{0fffff}{10}{Free for user use}\\
+	\begin{rightwordgroup}{Slot 3}
+		\memsection{0fffff}{0e0fbc}{3}{Application specific data}\\
+		\memsection{0e0fbb}{0c0000}{4}{Image}
+	\end{rightwordgroup}\\
+	\begin{rightwordgroup}{Slot 2}
+		\memsection{0bffff}{0a0fbc}{3}{Application specific data}\\
+		\memsection{0a0fbb}{040000}{4}{Image}
+	\end{rightwordgroup}\\
+	\begin{rightwordgroup}{Slot 1}
+		\memsection{07ffff}{060fbc}{3}{Application specific data}\\
+		\memsection{060fbb}{040000}{4}{Image}
+	\end{rightwordgroup}\\
+	\begin{rightwordgroup}{Slot 0 (Bootloader) \\ \textbf{Write protected}}
+		\memsection{03ffff}{02105c}{3}{Reserved}\\
+		\memsection{02105b}{0000a0}{4}{Bootloader image}\\
+		\memsection{00009f}{000000}{3}{Multiboot header}
+	\end{rightwordgroup}\\
+\end{bytefield}
+\end{document}

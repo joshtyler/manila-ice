@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Univeral tool for managing manila iCE bootloader
+# Universal tool for managing manila iCE bootloader
 set -e
 
 

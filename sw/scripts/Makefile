@@ -10,7 +10,7 @@ depends: ../spi_prog/spi_prog
 ../spi_prog/spi_prog:
 	make -C ../spi_prog
 
-install: ../spi_prog/spi_prog
+install: ../spi_prog/spi_prog uninstall
 	mkdir ${AUX_DIR}/manila
 	cp *.sh ${AUX_DIR}/manila/
 	cp ../spi_prog/spi_prog ${AUX_DIR}/manila/

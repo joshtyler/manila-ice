@@ -25,6 +25,20 @@ prog_help()
 	printf "\t -u  Skip the unlock/identify step. Assume the device is already present and unlocked\n"
 }
 
+check_serial()
+{
+	ID_DIR=$(mktemp -d)
+	${SCRIPT_PATH}/spi_prog -m wbuart --uartdev ${SERIAL} --baud 460800 --compaddr 0 -r -a 0x30000 -l 0x10000 -o ${ID_DIR}/id.bin &> /dev/null
+	if [[ "$(crc32 ${ID_DIR}/id.bin)" != "ffffffff" ]]; then
+		echo "ERROR: CRC check of ID block failed"
+			exit 1
+	fi
+	dd if=${ID_DIR}/id.bin of=${ID_DIR}/serial.bin bs=1 skip=8 count=8 &> /dev/null
+	SERIAL_HEX=$(cat ${ID_DIR}/serial.bin | xxd -p | fold -w2 | tac | tr -d "\n") # Lazy byte reversal to convert little endian number
+	printf "Serial number: %llu\n" 0x${SERIAL_HEX}
+	rm -r ${ID_DIR}
+}
+
 case ${ACTION} in
 	prog)
 		# Set default arguments
@@ -68,9 +82,15 @@ case ${ACTION} in
 			${SCRIPT_PATH}/identify.sh ${SERIAL}
 		fi
 
+		# Read serial number
+		check_serial
+
 		# Program the board
 		printf "Programming the board\n"
 		${SCRIPT_PATH}/spi_prog -m wbuart --uartdev ${SERIAL} --baud 460800 --compaddr 0 -w -v -a ${ADDR} -i ${FILE}
+
+		echo "Rebooting to bootloader"
+		echo "01040000" | xxd -r -p > /dev/ttyUSB0
 		;;
 	*)
 		printf "Unknown action: $1\n"

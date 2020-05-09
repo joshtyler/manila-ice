@@ -1,12 +1,6 @@
 [submodule "hx4k_dev_board/SOICbite"]
 	path = hw/SOICbite
 	url = https://github.com/SimonMerrett/SOICbite.git
-[submodule "hw/kicad-symbols"]
-	path = hw/kicad-symbols
-	url = https://github.com/joshtyler/kicad-symbols
-[submodule "hw/kicad-footprints"]
-	path = hw/kicad-footprints
-	url = https://github.com/joshtyler/kicad-footprints
 [submodule "hw/outputs/kicad-jlcpcb-bom-plugin"]
 	path = hw/outputs/kicad-jlcpcb-bom-plugin
 	url = https://github.com/joshtyler/kicad-jlcpcb-bom-plugin

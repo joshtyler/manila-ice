@@ -2,6 +2,10 @@
 
 manila iCE is a credit card sized Lattice iCE40 development board.
 
+Quick links:
+* [Schematic](https://github.com/joshtyler/manila-ice/releases/download/hardware_v1.0/manila_ice-schematic.pdf)
+* [Gerbers](https://github.com/joshtyler/manila-ice/releases/download/hardware_v1.0/manila_ice-fab.zip)
+
 ![PCB](docs/pcb.jpg)
 
 Features:
@@ -62,3 +66,9 @@ The bootloader partition is protected to prevent accidental erasure.
 In order to allow for firmware upgrades the protection is volatile. When the firmware is configured with the bootloader, before UART commands are accpeted it sends commands to the SPI flash to write protect the bootloader region, and then locks out that configuration until the SPI flash is power cycled.
 
 TODO: document process for upgrading bootloader
+
+## PCB Errata
+* v1.0 - No known issues affecting functionality
+	* LEDs in ethernet phy do not light due to symbol error
+	* Silkscreen box around phtograph on back does not fully enclose image after fab
+	* Caption for photograph on back is difficult to read

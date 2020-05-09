@@ -265,8 +265,9 @@ vector_to_axis
 	.axis_tlast (axis_version_unspaced_tlast),
 	.axis_tdata (axis_version_unspaced_tdata)
 );
-
+/* verilator lint_off REALCVT */
 localparam integer VERSION_SPACE_CYCLES = 10.0e-3/(1.0/CLK_FREQ);
+/* verilator lint_on REALCVT */
 axis_spacer
 #(
 	.AXIS_BYTES(1),

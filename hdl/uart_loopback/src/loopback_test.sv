@@ -76,12 +76,14 @@ axis_fifo
 	.axis_i_tvalid(parallel_data_valid),
 	.axis_i_tlast(1),
 	.axis_i_tdata(parallel_data),
+	.axis_i_tuser(1'b0),
 
 	// Output
 	.axis_o_tready(uart_tx_tready),
 	.axis_o_tvalid(uart_tx_tvalid),
 	.axis_o_tlast(),
-	.axis_o_tdata(uart_tx_tdata)
+	.axis_o_tdata(uart_tx_tdata),
+	.axis_o_tuser()
 );
 
 uart_tx
@@ -91,6 +93,8 @@ uart_tx
 ) uart_tx_inst (
 	.clk(clk),
 	.sresetn(sresetn),
+
+	.serial_ready(1'b1),
 
 	.serial_data(uart_tx),
 

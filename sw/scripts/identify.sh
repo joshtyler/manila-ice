@@ -23,12 +23,15 @@ stty -F ${SERIAL} ${BAUD}
 # Read the identification string
 # We do it this way to get past any stale data that may have filled the buffer
 # If we don't do this, I empirically find the first 60 bytes are stale
-IDENT=$(timeout 2s head -n 20 ${SERIAL} | tail -n 1)
+IDENT=$(timeout 10s head -n 20 ${SERIAL} | tail -n 1)
 
 if [[ "${IDENT}" == "${IDENT_STR}" ]]; then
 	echo "Successfully found ${IDENT}"
 	# Unlock
 	echo -n ${MAGIC} > ${SERIAL}
+elif [[ "${IDENT}" == "" ]]; then
+	echo "ERROR: No identification string sent from device"
+	exit 1
 else
 	echo "ERROR: Unknown device ${IDENT}"
 	exit 1

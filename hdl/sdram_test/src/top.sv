@@ -2,7 +2,7 @@
 
 module top
 (
-	input logic clk_raw,
+	input logic clk,
 
 	input  logic uart_rx,
 	output logic uart_tx,
@@ -30,11 +30,6 @@ localparam integer UART_BAUD_RATE = 460800;
 // Generate a power on reset
 logic sresetn;
 reset_gen #(.POLARITY(0)) reset_gen (.clk(clk), .en(1), .sreset(sresetn));
-
-logic clk;
-assign clk = clk_raw;
-//pll pll_inst (.clock_in(clk_raw), .clock_out(clk), .locked());
-
 
 // UARTs
 logic parallel_data_valid;

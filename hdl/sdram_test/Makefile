@@ -20,11 +20,11 @@ HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/wishbone/wb_sdram_controller.sv
 
 SYNTH_HDL_TOP = $(SRC_DIR)/top.sv
 
-PCF_FILE = $(SRC_DIR)/pins.pcf
+PCF_FILE = ../pins.pcf
 CLOCK_CONSTRAINTS_FILE = $(SRC_DIR)/clk.py
+
+include $(HDL_COMMON_DIR)/other/ice40_rules.mk
 
 .PHONY: prog
 prog : $(SYNTH_OUTPUT_NAME).bin
 	manila prog $^
-
-include $(HDL_COMMON_DIR)/other/ice40_rules.mk

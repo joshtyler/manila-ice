@@ -32,7 +32,7 @@ SYNTH_HDL_TOP = $(SRC_DIR)/top.sv
 SIM_HDL_TOP   = $(SRC_DIR)/top.sv
 
 SIM_CPP_SRC_FILES += tb/test_bootstrap.cpp
-PCF_FILE = $(SRC_DIR)/pins.pcf
+PCF_FILE = ../pins.pcf
 CLOCK_CONSTRAINTS_FILE = $(SRC_DIR)/clk.py
 
 VERILATOR_CFLAGS += -Wall -Wextra -g -I../../hdl_common/sim

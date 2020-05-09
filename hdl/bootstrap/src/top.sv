@@ -2,7 +2,7 @@
 
 module top
 (
-	input logic clk_raw,
+	input logic clk,
 
 	input  logic uart_rx,
 	output logic uart_tx,
@@ -10,12 +10,11 @@ module top
 	output logic [7:0] leds,
 	input logic [1:0] buttons,
 
-	output logic sck,
-	output logic ss,
-	input logic miso,
-	output logic mosi,
-
-	input logic wp_n // Not used for write proect. Used to enable/disable protection
+	output logic spi_sck,
+	output logic spi_ss,
+	input  logic spi_miso,
+	output logic spi_mosi,
+	input  logic spi_wp_n // Not used for write proect. Used to enable/disable protection
 );
 
 // The flow control is broken in the linux kernel, so hard disable for now
@@ -28,15 +27,9 @@ localparam integer CLK_FREQ = 50e6; // Can't use int'(50e6) because yosys doesn'
 /* verilator lint_on REALCVT */
 localparam integer UART_BAUD_RATE = 460800;
 
-// Generate a power on reset
-logic sresetn;
-
 // Nice long reset to ensure the SPI pins are available for us to use
+logic sresetn;
 reset_gen #(.POLARITY(0), .COUNT(32767)) reset_gen (.clk(clk), .en(1), .sreset(sresetn));
-
-logic clk;
-assign clk = clk_raw;
-//pll pll_inst (.clock_in(clk_raw), .clock_out(clk), .locked());
 
 
 // UARTs
@@ -229,10 +222,10 @@ wb_to_spi_master spi_inst (
 	.s_wb_cyc    (wb_spi_cyc    ),
 	.s_wb_ack    (wb_spi_ack    ),
 	.s_wb_stall  (wb_spi_stall  ),
-	.sck(sck),
-	.ss(ss),
-	.miso(miso),
-	.mosi(mosi)
+	.sck(spi_sck),
+	.ss(spi_ss),
+	.miso(spi_miso),
+	.mosi(spi_mosi)
 );
 
 
@@ -313,14 +306,14 @@ uart_tx
 // Enable the internal pullup on the wp_n pin by manually instantiating the IO
 logic enable_protection;
 `ifdef VERILATOR
-assign enable_protection = wp_n;
+assign enable_protection = spi_wp_n;
 `else
 SB_IO
 #(
 	.PIN_TYPE(6'b0000_01), // Simple input pin, no output capability
 	.PULLUP(1), // Enable pullup. Only available on banks 0,1,and 2
 ) protect_io_inst (
-	.PACKAGE_PIN(wp_n),
+	.PACKAGE_PIN(spi_wp_n),
 	.D_IN_0(enable_protection),
 );
 `endif

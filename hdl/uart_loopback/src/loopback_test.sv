@@ -9,7 +9,7 @@ module loopback_test
 	output logic uart_tx,
 
 	output logic [7:0] leds,
-	output logic eth_phyrst
+	output logic eth_phyrst_n
 );
 
 localparam integer CLK_FREQ = $rtoi(50e6);
@@ -21,7 +21,7 @@ reset_gen #(.POLARITY(0)) reset_gen (.clk(clk), .en(1), .sreset(sresetn));
 
 
 // Turn ethernet phy on
-assign eth_phyrst  = 1;
+assign eth_phyrst_n  = 1;
 
 // UARTs
 logic parallel_data_valid;

@@ -20,6 +20,7 @@ prog_help()
 	printf "Usage for prog action:\n"
 	printf "\t$0 prog [optional arguments] [filename]\n"
 	printf "Acceptable optional arguments for prog action:\n"
+	printf "\t -a The address in flash to program (overrides slot if provided)\n"
 	printf "\t -s [slot number] The slot in flash to program (default is slot 1)\n"
 	printf "\t -d [serial device] The path to the serial device (default is auto detect)\n"
 	printf "\t -u  Skip the unlock/identify step. Assume the device is already present and unlocked\n"
@@ -42,11 +43,13 @@ check_serial()
 case ${ACTION} in
 	prog)
 		# Set default arguments
+		ADDR=""
 		SLOT="1"
 		SERIAL=""
 		UNLOCK=true
-		while getopts s:d:u opt ; do
+		while getopts a:s:d:u opt ; do
 			case "$opt" in
+				a) ADDR="$OPTARG";;
 				s) SLOT="$OPTARG";;
 				d) SERIAL="$OPTARG";;
 				u) UNLOCK=false;;
@@ -67,7 +70,9 @@ case ${ACTION} in
 		FILE=$1
 		shift
 
-		ADDR=$((0x40000 * ${SLOT}))
+		if [[ -z ${ADDR} ]]; then
+			ADDR=$((0x40000 * ${SLOT}))
+		fi
 
 		# Auto detect the serial if the user didn't provide it
 		if [[ -z ${SERIAL} ]]; then

@@ -10,3 +10,6 @@
 [submodule "sw/spi_prog"]
 	path = sw/spi_prog
 	url = https://github.com/joshtyler/spi_prog.git
+[submodule "hdl/zephyr_test/picorv32"]
+	path = hdl/zephyr_test/picorv32
+	url = https://github.com/cliffordwolf/picorv32.git

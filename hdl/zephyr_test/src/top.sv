@@ -11,7 +11,7 @@ module top (
 	inout  spi_hold_n,
 
 	output uart_tx,
-	input  uart_rx,
+	input  uart_rx
 );
 
 	logic clk25;
@@ -19,6 +19,7 @@ module top (
 	logic pll_locked;
 	pll pll_inst (.clock_in(clk), .clock_out(clk25), .locked(pll_locked));
 
+	logic resetn;
 	reset_gen #(.POLARITY(0), .COUNT(32767)) reset_gen (.clk(clk), .en(pll_locked), .sreset(resetn));
 
 	wire flash_io0_oe, flash_io0_do, flash_io0_di;

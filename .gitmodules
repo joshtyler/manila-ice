@@ -13,3 +13,6 @@
 [submodule "hdl/zephyr_test/picorv32"]
 	path = hdl/zephyr_test/picorv32
 	url = https://github.com/cliffordwolf/picorv32.git
+[submodule "hdl/zephyr_test/uip"]
+	path = hdl/zephyr_test/uip
+	url = https://github.com/adamdunkels/uip.git

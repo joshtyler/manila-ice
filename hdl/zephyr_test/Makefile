@@ -38,8 +38,23 @@ sw_prog : fw.bin
 	manila prog -a 0x00100000 $^
 
 FIRMWARE_DIR = ./firmware
-fw.elf: $(FIRMWARE_DIR)/sections.lds $(FIRMWARE_DIR)/start.s $(FIRMWARE_DIR)/firmware.c
-	riscv64-unknown-elf-gcc -mabi=ilp32 -march=rv32imc -Wl,-Bstatic,-T,$(FIRMWARE_DIR)/sections.lds,--strip-debug -ffreestanding -nostdlib -o $@ $(filter-out $<,$^)
+UIP_DIR = ./uip
+FIRMWARE_SRCS += $(FIRMWARE_DIR)/start.s
+FIRMWARE_SRCS += $(FIRMWARE_DIR)/firmware.c
+FIRMWARE_SRCS += $(FIRMWARE_DIR)/string.c
+FIRMWARE_SRCS += $(FIRMWARE_DIR)/clock-arch.c
+FIRMWARE_SRCS += $(FIRMWARE_DIR)/stdio.c
+FIRMWARE_SRCS += $(UIP_DIR)/uip/uip.c
+FIRMWARE_SRCS += $(UIP_DIR)/uip/uip_arp.c
+FIRMWARE_SRCS += $(UIP_DIR)/uip/uiplib.c
+FIRMWARE_SRCS += $(UIP_DIR)/uip/timer.c
+FIRMWARE_SRCS += $(UIP_DIR)/uip/psock.c
+FIRMWARE_SRCS += $(UIP_DIR)/uip/uip-neighbor.c
+FIRMWARE_SRCS += $(UIP_DIR)/apps/hello-world/hello-world.c
+fw.elf: $(FIRMWARE_DIR)/sections.lds $(FIRMWARE_SRCS)
+	# We should be able to compile with -ffunction-sections -fdata-sections and link with --gc-sections
+	# But for some reason this discards everything...
+	riscv64-unknown-elf-gcc -I$(FIRMWARE_DIR) -I$(UIP_DIR)/apps/hello-world -I$(UIP_DIR)/uip -mabi=ilp32 -march=rv32imc -Wl,-Bstatic,-T,$(FIRMWARE_DIR)/sections.lds,--strip-debug,-Map=output.map -ffreestanding -nostdlib -o $@ $(filter-out $<,$^)
 
 fw.hex: fw.elf
 	riscv64-unknown-elf-objcopy -O verilog $< $@

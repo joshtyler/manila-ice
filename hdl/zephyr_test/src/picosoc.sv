@@ -69,13 +69,13 @@ module picosoc (
 	input  flash_io2_di,
 	input  flash_io3_di
 );
-	parameter [0:0] BARREL_SHIFTER = 1;
-	parameter [0:0] ENABLE_MULDIV = 1;
-	parameter [0:0] ENABLE_COMPRESSED = 1;
-	parameter [0:0] ENABLE_COUNTERS = 1;
+	parameter [0:0] BARREL_SHIFTER = 0;
+	parameter [0:0] ENABLE_MULDIV = 0;
+	parameter [0:0] ENABLE_COMPRESSED = 0;
+	parameter [0:0] ENABLE_COUNTERS = 0;
 	parameter [0:0] ENABLE_IRQ_QREGS = 0;
 
-	parameter integer MEM_WORDS = 256;
+	parameter integer MEM_WORDS = 1;
 	parameter [31:0] STACKADDR = (4*MEM_WORDS);       // end of memory
 	parameter [31:0] PROGADDR_RESET = 32'h 0010_0000; // 1 MB into flash
 	parameter [31:0] PROGADDR_IRQ = 32'h 0000_0000;
@@ -197,7 +197,7 @@ module picosoc (
 	) uart_tx (
 		.clk(clk),
 		.sresetn(resetn),
-		.serial_ready(1),
+		.serial_ready(1'b1),
 		.serial_data(ser_tx),
 		.s_axis_tready(uart_tx_ready),
 		.s_axis_tvalid(uart_tx_sel),
@@ -232,9 +232,10 @@ module picosoc (
 		.axis_o_tready(uart_rx_sel),
 		.axis_o_tvalid(uart_rx_valid),
 		.axis_o_tlast(),
-		.axis_o_tdata(uart_rx_data),
+		.axis_o_tdata(uart_rx_data[7:0]),
 		.axis_o_tuser()
 	);
+	assign uart_rx_data[31:8] = '0;
 
 	always @(posedge clk)
 		ram_ready <= mem_valid && !mem_ready && mem_addr < 4*MEM_WORDS;

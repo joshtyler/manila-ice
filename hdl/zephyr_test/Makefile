@@ -15,8 +15,16 @@ HDL_SRC_FILES += $(PICORV32_DIR)/picorv32.v
 HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/other/reset_gen.sv
 HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/other/uart_tx.sv
 HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/other/uart_rx.sv
-HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/other/logic_cross_clock.sv
+HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/other/cdc_sync.sv
+HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/other/cdc_pulse.sv
+HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/other/cdc_vector.sv
+HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/other/simple_dual_port_two_clocks.sv
 HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/axis/axis_register.sv
+HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/axis/axis_error_filter_async.sv
+HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/axis/axis_packet_fifo_async.sv
+HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/axis/axis_joiner.sv
+HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/axis/vector_to_axis.sv
+HDL_SRC_FILES += $(HDL_COMMON_SYNTH_DIR)/axis/axis_spacer.sv
 
 SYNTH_HDL_TOP = $(SRC_DIR)/top.sv
 

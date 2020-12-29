@@ -62,7 +62,7 @@ logic [7:0] uart_tx_tdata;
 axis_fifo
 #(
 	.AXIS_BYTES(1),
-	.DEPTH(1024)
+	.LOG2_DEPTH(10)
 ) fifo_inst (
 	.clk(clk),
 	.sresetn(sresetn),

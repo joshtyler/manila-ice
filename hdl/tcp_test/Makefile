@@ -42,7 +42,7 @@ prog : $(SYNTH_OUTPUT_NAME).bin
 
 
 proc.json : $(HDL_SRC_FILES)
-	yosys -p "read_verilog -sv $(HDL_INC_DIRS) $(HDL_SRC_FILES); synth_ice40 -run :; write_json $@" | tee yosys.log
+	yosys -p "read_verilog -sv $(HDL_INC_DIRS) $(HDL_SRC_FILES); synth_ice40 -run :bram; write_json $@" | tee yosys.log
 	@echo "Yosys warnings:"
 	@cat yosys.log | grep -in "warning"
 

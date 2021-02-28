@@ -12,6 +12,24 @@ module tb;
     wire eth_txer;
     wire eth_phyrst_n;
 
+	wire        axis_arp_tx_tready;
+	wire        axis_arp_tx_tvalid;
+	wire        axis_arp_tx_tlast;
+	wire [3:0]  axis_arp_tx_tkeep;
+	wire [31:0] axis_arp_tx_tdata;
+
+    wire        axis_to_mac_tready;
+	wire        axis_to_mac_tvalid;
+	wire        axis_to_mac_tlast;
+	wire [3:0]  axis_to_mac_tkeep;
+	wire [31:0] axis_to_mac_tdata;
+
+    wire        axis_to_mac_packetised_tready;
+	wire        axis_to_mac_packetised_tvalid;
+	wire        axis_to_mac_packetised_tlast;
+	wire [3:0]  axis_to_mac_packetised_tkeep;
+	wire [31:0] axis_to_mac_packetised_tdata;
+
     always #5 clk = ~clk;
 
     reg eth_rxclk_reg =0;

@@ -39,3 +39,15 @@ include $(HDL_COMMON_DIR)/other/ice40_rules.mk
 .PHONY: prog
 prog : $(SYNTH_OUTPUT_NAME).bin
 	manila prog $^
+
+
+proc.json : $(HDL_SRC_FILES)
+	yosys -p "read_verilog -sv $(HDL_INC_DIRS) $(HDL_SRC_FILES); synth_ice40 -run :; write_json $@" | tee yosys.log
+	@echo "Yosys warnings:"
+	@cat yosys.log | grep -in "warning"
+
+%_sim_netlist.v : %.json
+	yosys -o $@ $^
+
+proc_sim : testbench.v proc_sim_netlist.v
+	iverilog -o $@ $^ `yosys-config --datdir/ice40/cells_sim.v`

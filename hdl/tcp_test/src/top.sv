@@ -18,46 +18,7 @@ module top
 	output logic       eth_txer,
 	output logic       eth_phyrst_n,
 
-	// Debug
-	output logic        axis_arp_tx_tready,
-	output logic        axis_arp_tx_tvalid,
-	output logic        axis_arp_tx_tlast,
-	output logic [3:0]  axis_arp_tx_tkeep,
-	output logic [31:0] axis_arp_tx_tdata,
-
-	output logic        axis_to_mac_tready,
-	output logic        axis_to_mac_tvalid,
-	output logic        axis_to_mac_tlast,
-	output logic [3:0]  axis_to_mac_tkeep,
-	output logic [31:0] axis_to_mac_tdata,
-
-	output logic        axis_to_mac_packetised_tready,
-	output logic        axis_to_mac_packetised_tvalid,
-	output logic        axis_to_mac_packetised_tlast,
-	output logic [3:0]  axis_to_mac_packetised_tkeep,
-	output logic [31:0] axis_to_mac_packetised_tdata
-
 );
-
-/*
-wire        axis_arp_tx_tready;
-wire        axis_arp_tx_tvalid;
-wire        axis_arp_tx_tlast;
-wire [3:0]  axis_arp_tx_tkeep;
-wire [31:0] axis_arp_tx_tdata;
-
-wire        axis_to_mac_tready;
-wire        axis_to_mac_tvalid;
-wire        axis_to_mac_tlast;
-wire [3:0]  axis_to_mac_tkeep;
-wire [31:0] axis_to_mac_tdata;
-
-wire        axis_to_mac_packetised_tready;
-wire        axis_to_mac_packetised_tvalid;
-wire        axis_to_mac_packetised_tlast;
-wire [3:0]  axis_to_mac_packetised_tkeep;
-wire [31:0] axis_to_mac_packetised_tdata;
-*/
 
 	// For now our test has exactly the same ports as the test harness(!)
 	arp_engine_harness_with_mac inst (.*);
